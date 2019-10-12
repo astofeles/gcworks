@@ -6,3 +6,6 @@ ball:
 
 robot:
 	$(MAKE) -C RobotArm
+
+maze:
+	$(MAKE) -C Maze
