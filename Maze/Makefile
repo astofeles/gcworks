@@ -1,0 +1,4 @@
+
+all: maze
+
+maze:
