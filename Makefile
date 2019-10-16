@@ -1,5 +1,6 @@
 all:
-	@echo "Please, use 'make ball' or 'make robot'"
+	@echo "Please, run one of the following"
+	@echo "'make ball', 'make robot' or 'make maze'"
 
 ball:
 	$(MAKE) -C Ball
