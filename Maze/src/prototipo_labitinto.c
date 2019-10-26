@@ -23,9 +23,10 @@
 #define COLUNAS 32
 
 //Declaração de Variáveis Globais
-int posx=0, posy=1, posz=20; //Variáveis que definem a posição da câmera
+int posx=0, posy=600, posz=0; //Variáveis que definem a posição da câmera
 int oy=0,ox=0,oz=0;         //Variáveis que definem para onde a câmera olha
 int lx=0, ly=1,  lz=0;         //Variáveis que definem qual eixo estará na vertical do monitor.
+int projecao=0;
 
 //Matriz que define o labirinto
 int Matriz[LINHAS][COLUNAS];
@@ -70,6 +71,7 @@ void desenhaChao(){
 
    glPushMatrix();
         //Definição dos vertices do cubo que forma o chão
+    glColor3ub(100, 100, 200);
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f, -1.0f, 0.0f); //Define o vetor normal do chão.
 		glVertex3f( 512,  -0.5,  512);   //Superior esquerdo
@@ -136,7 +138,8 @@ void Display()
                               (Ortogonal ou Perspectiva) na matriz PROJECTION.*/
    glLoadIdentity();//"Limpa" ou "transforma" a matriz em identidade, reduzindo possíveis erros.
 
-   glOrtho(-150, 150, -150, 150, -150, 150); //Define a projeção como ortogonal
+   // glOrtho(-150, 150, -150, 150, -150, 150); //Define a projeção como ortogonal
+   gluPerspective(45, 1, 1, 700);
   
    glMatrixMode(GL_MODELVIEW);/*glMatrixMode()- define qual matriz será alterada. SEMPRE defina a câmera 
                               (Ortogonal ou Perspectiva) na matriz MODELVIEW (onde o desenho ocorrerá).*/
