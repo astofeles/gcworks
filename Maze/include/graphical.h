@@ -7,6 +7,6 @@ extern void drawMaze();
 
 extern void drawPlayer();
 
-extern void drawGraph(int**);
+extern void drawGraph(int**, int);
 
 #endif

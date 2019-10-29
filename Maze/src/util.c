@@ -131,4 +131,15 @@ void kruskal(int **graph, int n, int **span)  {
     }
 }
 
+
+int *hexto3ubv(int hex) {
+    static int color[3];
+    int i; 
+    for (i = 2; i >= 0; --i) {
+        color[i] = hex & 255;
+        hex >> 8;
+    }
+    return (int*) color;
+}
+
 #endif

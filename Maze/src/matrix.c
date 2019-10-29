@@ -78,11 +78,11 @@ void __sssmatrix_set_zero(sssmatrix * matrix, int row, int column) {
     vptr = matrix->columns[column];
     hptr = matrix->rows[row];
     rem = (sssmatrix_node*) NULL ;
-    while (vptr1 && hptr1) {
+    while (vptr && hptr) {
         if (vptr->row > row) break;
         if (hptr->column > column) break;
-        if (vptr->row == row) rem = vptr, break;
-        if (hptr->column == column) rem = hptr, break;
+        if (vptr->row == row) { rem = vptr; break; }
+        if (hptr->column == column) { rem = hptr; break; }
         vptr = vptr->below;
         hptr = hptr->right;
     }
@@ -98,7 +98,7 @@ void __sssmatrix_set_zero(sssmatrix * matrix, int row, int column) {
     }
 }
 
-void __sssmatrix_set(sssmatrix * matrix, int row, int column) {
+void __sssmatrix_set(sssmatrix * matrix, int row, int column, int values) {
     sssmatrix_node *vptr, *hptr, *ptr;
     vptr = matrix->columns[column];
     hptr = matrix->rows[row];
@@ -107,6 +107,7 @@ void __sssmatrix_set(sssmatrix * matrix, int row, int column) {
         vptr = vptr->below;
         hptr = hptr->right;
     }
+    // TODO: continue here, how to set an element
 }
 
 void sssmatrix_set(sssmatrix * matrix, int row, int column, int value) {
@@ -128,7 +129,6 @@ void sssmatrix_set(sssmatrix * matrix, int row, int column, int value) {
         __sssmatrix_set(matrix, row, column, value);
     }
 }
-    
 
 
 #endif

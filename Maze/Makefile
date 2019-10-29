@@ -29,10 +29,11 @@ compile: $(APP)
 $(APP): $(OBJ)
 	$(CC) -o $@ $^
 
-out/main.o: src/main.c
+$(ODIR)/main.o: $(SDIR)/main.c
 	gcc -o $@ -c $< $(CFLAGS)
 
-out/%.o: %.c %.h
+$(ODIR)/%.o: %.c %.h
+	mkdir -p $(ODIR)
 	$(CC) -o $@ -c $< $(CFLAGS)
 
 clean:

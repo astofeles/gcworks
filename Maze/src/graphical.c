@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <freeglut>
+#include <GL/freeglut.h>
 
 void drawFloor() {
     glPushMatrix();

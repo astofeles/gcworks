@@ -16,8 +16,10 @@ int fill_sorted_edges(int **graph, int n, edge_t *edge_list);
 void kruskal(int **graph, int n, int **span);
 /* Checks is the addition of an edge will close a cycle in the
  * graph. */
-int check_cycle(int **graph,u  n, int from, int to);
+int check_cycle(int **graph, int n, int from, int to);
 /* Genrate a graph for the maze of N squared nodes */
 void gen_graph(int **gen, int n);
+/* Convert hexadecimal color to OpenGL integer vector */
+int * hexto3ubv(int);
 
 #endif

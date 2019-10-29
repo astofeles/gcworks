@@ -6,7 +6,7 @@
 #ifdef _MAZE_H
 
 void create_maze(int **graph, int n) {
-
+    
 }
 
 #endif
