@@ -5,9 +5,10 @@
   - A função é a desenhaChao.
   - O chão está sendo desenhado em 3 dimensões (x,y,z).
   - O chão está no plano xz e tem altura 1 no eixo y.
-  - Quando rodar o código será como se tivesse vendo o de frente para o eixo xz
-  - Necessário fazer uma câmera para orbitar a cima do chão
+  - A função camera faz com que possa-se observar o chão de cima. Na função as direções dos eixos estão especificadas
+  - O tamanho do chão foi reduzido para facilitar a vizualição e a realização de testes
   - Qualquer dúvida perguntar.
+
 
 ************************************************************************/
 
@@ -17,17 +18,23 @@
 #include <math.h>
 #include <GL/freeglut.h>
 
-
 //Tamanho do labirinto
 #define LINHAS 32
 #define COLUNAS 32
 
 //Declaração de Variáveis Globais
-int posx=0, posy=600, posz=0; //Variáveis que definem a posição da câmera
+int projecao=0; //Variável Lógica para Definir o Tipo de Projeção (Perspectiva ou Ortogonal)
 int oy=0,ox=0,oz=0;         //Variáveis que definem para onde a câmera olha
 int lx=0, ly=1,  lz=0;         //Variáveis que definem qual eixo estará na vertical do monitor.
-int projecao=0;
 
+//Câmera
+float now    = 10;
+float radius = 10;
+float camX = 10;
+float camZ = 20;
+float camY = 10;
+
+ 
 //Matriz que define o labirinto
 int Matriz[LINHAS][COLUNAS];
 int flag = 0; //Impede a geração aleatória interminável
@@ -37,7 +44,7 @@ void Inicializa();
 void Display();
 void Mouse(int botao, int estado, int x, int y);
 void keyboard (unsigned char key, int x, int y);
-void TeclasEspeciais (int key, int x, int y);
+void camera(int key, int x, int y); //Move a câmera para obervar o labirinto
 void desenhaFormas(int posicao, int x, int y, int i, int j);
 void desenhaLabirinto(int Mat[LINHAS][COLUNAS]);
 void geraMatriz(int Mat[LINHAS][COLUNAS]);
@@ -50,7 +57,6 @@ struct mapa{
 	int y; //Coordenada y
 
 }mapa;
-
 
 void geraMatriz(int Mat[LINHAS][COLUNAS]){
 
@@ -71,13 +77,12 @@ void desenhaChao(){
 
    glPushMatrix();
         //Definição dos vertices do cubo que forma o chão
-    glColor3ub(100, 100, 200);
 	glBegin(GL_QUADS);
 		glNormal3f(0.0f, -1.0f, 0.0f); //Define o vetor normal do chão.
-		glVertex3f( 512,  -0.5,  512);   //Superior esquerdo
-		glVertex3f(-512,  -0.5,  512);   //Inferior esquerdo
-		glVertex3f(-512,  -0.5,  -512);   //Superior direito
-		glVertex3f( 512,  -0.5,  -512);   //Inferior direito.
+		glVertex3f( 20,  -0.5,   20);   //Superior esquerdo
+		glVertex3f(-20,  -0.5,   20);   //Inferior esquerdo
+		glVertex3f(-20,  -0.5,  -20);   //Superior direito
+		glVertex3f( 20,  -0.5,  -20);   //Inferior direito.
        glEnd();
    glPopMatrix();
 
@@ -88,8 +93,13 @@ void desenhaChao(){
 
 void desenhaCubo(int x, int y, int i , int j){
 
+        glColor3ub(0,255,0);
+        glPushMatrix();
+		glTranslatef(x, 0, y);
+		glutSolidCube(1);
+	glPushMatrix();
 
-        glutPostRedisplay();
+	glutPostRedisplay();
 
 }
 
@@ -107,7 +117,7 @@ void desenhaLabirinto(int Mat[LINHAS][COLUNAS]){
 		mapa.x = x0;
 		mapa.y = y0;  
 		if(Mat[i][j] == 0){
-			desenhaCubo(x, y, i ,j);
+			
 		}
     	     }
 	}
@@ -138,20 +148,22 @@ void Display()
                               (Ortogonal ou Perspectiva) na matriz PROJECTION.*/
    glLoadIdentity();//"Limpa" ou "transforma" a matriz em identidade, reduzindo possíveis erros.
 
-   // glOrtho(-150, 150, -150, 150, -150, 150); //Define a projeção como ortogonal
-   gluPerspective(45, 1, 1, 700);
-  
+   if (projecao==1)
+      glOrtho(-150, 150, -150, 150, -150, 150); //Define a projeção como ortogonal
+   else
+     gluPerspective(45,1,1,150); //Define a projeção como perspectiva
+   
    glMatrixMode(GL_MODELVIEW);/*glMatrixMode()- define qual matriz será alterada. SEMPRE defina a câmera 
                               (Ortogonal ou Perspectiva) na matriz MODELVIEW (onde o desenho ocorrerá).*/
    glLoadIdentity(); ////"Limpa" ou "transforma" a matriz em identidade, reduzindo possíveis erros.
-
-   gluLookAt(posx,posy,posz,ox,oy,oz,lx,ly,lz); //Define a pos da câmera, para onde olha e qual eixo está na vertical.
+   
+   gluLookAt(camX, camY, camZ,ox,oy,oz,lx,ly,lz); //Define a pos da câmera, para onde olha e qual eixo está na vertical.
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); /* "limpa" um buffer particular ou combinações de buffers, 
                                                          onde buffer é uma área de armazenamento para informações da imagem. 
                                                         Nesse caso, está "limpando os buffers para suportarem animações */
    //Chamada para Função  ou funções para desenhar o objeto/cena...
    //----------------------------------------------------------------
-   
+ 
    geraMatriz(Matriz);
    glPushMatrix(); //Salva o estado atual da cena. O que for desenhado após o Push não influenciará o já representado
       desenhaLabirinto(Matriz);
@@ -167,86 +179,56 @@ void Mouse(int botao, int estado, int x, int y)
 {  //botão - recebe o código do botão pressionado
    //estado - recebe se está pressionado ou não
    //x, y - recebem respectivamente as posições do mouse na tela
-   switch (botao)
-   {
-      case GLUT_LEFT_BUTTON:
-      if (estado == GLUT_DOWN)
-      {                  
-         projecao=1;
-         posx=0; posy=0; posz=0;
-         ox=0,oy=0,oz=0;
-         lx=0, ly=1,lz=0;
-         glutPostRedisplay();
-      }
-      break;
-
-      case GLUT_RIGHT_BUTTON:
-      if(estado == GLUT_DOWN)
-      {
-         projecao=0;
-         posx=0; posy=10; posz=20;
-         oy=0; ox=0;  oz=0;
-         lx=0, ly=1, lz=0;
-         glutPostRedisplay();
-      }
-      break;
-   }
+  
 }
 
 void keyboard (unsigned char key, int x, int y)
 {//Key - recebe o código ASCII da tecla
  //x, y - recebem as posições do mouse na tela (permite tratar os dois dispositivos)
-      if (key=='d')
-      {
-         lz=0; ly=1; ox+=5;
-      }
-      else if (key=='e')
-      {
-         lz=0; ly=1; ox-=5;
-      }
-      else if (key=='c')
-      {
-         lz=0; ly=1; oy+=5;
-      }
-      else if (key=='b')    
-      {
-         lz=0; ly=1; oy-=5;
-      }
-      else if (key==27)
-      {         
-         exit(0);
-      }
+     
       glutPostRedisplay();
+
 }
 
-void TeclasEspeciais (int key, int x, int y)
+void camera(int key, int x, int y)
 {//Key - recebe o código ASCII da tecla
  //x, y - recebem respectivamente as posições mouse na tela (permite tratar os dois dispositivos)
+
+      float cameraSpeed = 0.5;
       if (key==GLUT_KEY_RIGHT)
       {
-         posx+=5; ox+=5;
+         camZ-= cameraSpeed; oz-=cameraSpeed; //Afasta a câmera no eixo z
       }
       else if (key==GLUT_KEY_PAGE_UP)
       {
-         posy+=5; oy+=5;
+         
       }
       else if (key==GLUT_KEY_UP)
       {
-         posz-=5; oz-=5;
+	 camY+=cameraSpeed; oy+=cameraSpeed; //Afasta a câmera no eixo y
+         
       }
       else if (key==GLUT_KEY_LEFT)    
       { 
-         posx-=5; ox-=5;
+
+          camZ+= cameraSpeed; oz+=cameraSpeed; //Aproxima a câmera no eixo
+
       }
       else if (key==GLUT_KEY_PAGE_DOWN)
       {
-         posz-=5; oz-=5;
+        
+
       }
       else if (key==GLUT_KEY_DOWN)
-      {      
-         posz+=5; oz+=5;
-      }
+      {
+	camY-=cameraSpeed; oy-=cameraSpeed; //Aproxima a câmera no eixo y
+   
+      } 
+
+
       glutPostRedisplay();
+
+
 }
 
 
@@ -261,11 +243,11 @@ int main(int argc,char **argv)
   
    glutInitWindowSize(300, 300);
    glutInitWindowPosition(10, 10);
-   glutCreateWindow("Estrutura para uma Aplicação 3D");
+   glutCreateWindow("Protótipo Labirinto - 3D");
    glutDisplayFunc(Display);
    glutMouseFunc(Mouse);
    glutKeyboardFunc(keyboard);
-   glutSpecialFunc(TeclasEspeciais);
+   glutSpecialFunc(camera);
    glutMainLoop();
 
    return 0;
