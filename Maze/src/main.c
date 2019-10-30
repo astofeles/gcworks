@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <GL/freeglut.h>
+#include <ctype.h>
 #include "util.h"
 #include "maze.h" // mazeMapInit, initCamera
 #include "graphical.h" // drawMaze, setCamera
@@ -19,6 +20,7 @@ int main(int argc, char *argv[]) {
     mazeMapInit();  // create random maze
     printf("DBG: Depois mazeMapInit()\n");
 
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
@@ -48,9 +50,11 @@ void display() {
     } 
 
     glMatrixMode(GL_MODELVIEW);
-
     glLoadIdentity();
-    gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 1, 1, 0);
+
+    gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 1, 0, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPushMatrix();
     printf("Antes de 'drawMaze'\n");
@@ -66,5 +70,23 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+    if (key == 'w') {
+        printf("DGB: 'w' pressed\n");
+        camera.posx -= 0.5;
+        camera.lx -= 0.5;
+    } else if (key == 's') {
+        camera.posx += 0.5;
+        camera.lx += 0.5;
+    } else if (key == 'a') {
+        camera.posz += 0.5;
+        camera.lz += 0.5;
+    } else if (key == 'd') {
+        camera.posz -= 0.5;
+        camera.lz -= 0.5;
+    } else if (key == '\t') {
+        if (camera.mode == ORTHO) camera.mode = PERSP;
+        else if (camera.mode == PERSP) camera.mode = ORTHO;
+    }
 
+    glutPostRedisplay();
 }

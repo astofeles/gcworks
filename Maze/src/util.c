@@ -40,8 +40,8 @@ void backgen(int map[complexity][complexity], int n) {
         length = 0;
         if (i > 0 && !(map[i-1][j] & visited)) list[length++] = (struct node) {i-1, j, SOUTH};
         if (j > 0 && !(map[i][j-1] & visited)) list[length++] = (struct node) {i, j-1, WEST};
-        if (i < n && !(map[i+1][j] & visited)) list[length++] = (struct node) {i+1, j, NORTH};
-        if (j < n && !(map[i][j+1] & visited)) list[length++] = (struct node) {i, j+1, EAST};
+        if (i < n-1 && !(map[i+1][j] & visited)) list[length++] = (struct node) {i+1, j, NORTH};
+        if (j < n-1 && !(map[i][j+1] & visited)) list[length++] = (struct node) {i, j+1, EAST};
         // if there is neighbor not visited
         if (length > 0) {
             // choose randomally a neighbor not viseted

@@ -12,25 +12,25 @@
 void initCamera() {
     // initial camera settings
     // camera position
-    camera.posx = 0;
-    camera.posy = 20;
-    camera.posz = 0;
+    camera.posx = 16;
+    camera.posy = 32;
+    camera.posz = 16;
     // camera lookat
-    camera.lx = 0;
+    camera.lx = 16;
     camera.ly = 0;
-    camera.lz = 0;
+    camera.lz = 16;
     // perspective properties
     camera.aperture = 45;
-    camera.prop = (float) winwidth / winheight;
+    camera.prop = ((float) winwidth) / winheight;
     camera.min = 1;
-    camera.max = 100;
+    camera.max = 200;
     // orthogonal properties
-    camera.xmin = 0;
-    camera.xmax = 32;
-    camera.ymin = 0;
-    camera.ymax = 32;
-    camera.zmin = 0;
-    camera.zmax = 32;
+    camera.xmin = -16;
+    camera.xmax = 48;
+    camera.ymin = -16;
+    camera.ymax = 48;
+    camera.zmin = -16;
+    camera.zmax = 48;
     // camera mode (PERSP or ORTHO)
     camera.mode = PERSP;
     // camera gaming properties
