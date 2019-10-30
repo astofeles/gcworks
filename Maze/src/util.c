@@ -1,9 +1,10 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "util.h"
-#include "maze.h"
 
 #ifdef  _MAZE_UTIL
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "maze.h"
 
 /* Defines the structure of a graph edge
  *
@@ -132,14 +133,14 @@ void kruskal(int **graph, int n, int **span)  {
 }
 
 
-int *hexto3ubv(int hex) {
-    static int color[3];
+char *hexto3ubv(int hex) {
+    static char color[3];
     int i; 
     for (i = 2; i >= 0; --i) {
         color[i] = hex & 255;
-        hex >> 8;
+        hex = hex >> 8;
     }
-    return (int*) color;
+    return (char*) color;
 }
 
 #endif

@@ -15,7 +15,7 @@ CFLAGS=\
 	-lglut	\
 	-lGL	\
 	-lGLU	\
-	-I$(IDIR)
+	-I./$(IDIR)
 
 .PHONY: clean compile test run
 
@@ -27,7 +27,7 @@ run: $(APP)
 compile: $(APP)
 
 $(APP): $(OBJ)
-	$(CC) -o $@ $^
+	$(CC) -o $@ $^ $(CFLAGS)
 
 $(ODIR)/main.o: $(SDIR)/main.c
 	gcc -o $@ -c $< $(CFLAGS)

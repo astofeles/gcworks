@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #ifndef _MAZE_UTIL
 #define _MAZE_UTIL
+
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Defines the structure of a graph edge */
 struct _edge;
@@ -20,6 +20,6 @@ int check_cycle(int **graph, int n, int from, int to);
 /* Genrate a graph for the maze of N squared nodes */
 void gen_graph(int **gen, int n);
 /* Convert hexadecimal color to OpenGL integer vector */
-int * hexto3ubv(int);
+char * hexto3ubv(int);
 
 #endif
