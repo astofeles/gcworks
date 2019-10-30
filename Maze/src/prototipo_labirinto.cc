@@ -43,105 +43,105 @@ int flag = 0; //Impede a geração aleatória interminável
 void Inicializa();
 void Display();
 void Mouse(int botao, int estado, int x, int y);
-void keyboard (unsigned char key, int x, int y);
-void camera(int key, int x, int y); //Move a câmera para obervar o labirinto
-void desenhaFormas(int posicao, int x, int y, int i, int j);
-void desenhaLabirinto(int Mat[LINHAS][COLUNAS]);
-void geraMatriz(int Mat[LINHAS][COLUNAS]);
-void desenhaCubo(int x, int y, int i, int j);
+    void keyboard (unsigned char key, int x, int y);
+    void camera(int key, int x, int y); //Move a câmera para obervar o labirinto
+    void desenhaFormas(int posicao, int x, int y, int i, int j);
+    void desenhaLabirinto(int Mat[LINHAS][COLUNAS]);
+    void geraMatriz(int Mat[LINHAS][COLUNAS]);
+    void desenhaCubo(int x, int y, int i, int j);
 
-//Struct para definir as coordenadas do labirinto
-struct mapa{
+    //Struct para definir as coordenadas do labirinto
+    struct mapa{
 
-	int x; //Coordenada x
-	int y; //Coordenada y
+        int x; //Coordenada x
+        int y; //Coordenada y
 
-}mapa;
+    }mapa;
 
-void geraMatriz(int Mat[LINHAS][COLUNAS]){
+    void geraMatriz(int Mat[LINHAS][COLUNAS]){
 
-	srand(time(NULL));
-	if(flag == 0){
-		for(int i = 0; i < LINHAS; i++){
-	    		for(int j = 0; j < COLUNAS; j++){
-				Mat[i][j] = rand() % 2; //Gera números aleatórios entre 0 e 1.
-	    		}
-	
-		}
-	}
+        srand(time(NULL));
+        if(flag == 0){
+            for(int i = 0; i < LINHAS; i++){
+                    for(int j = 0; j < COLUNAS; j++){
+                    Mat[i][j] = rand() % 2; //Gera números aleatórios entre 0 e 1.
+                    }
+        
+            }
+        }
 
-	flag = 1;
-}
+        flag = 1;
+    }
 
-void desenhaChao(){
+    void desenhaChao(){
 
-   glPushMatrix();
-        //Definição dos vertices do cubo que forma o chão
-	glBegin(GL_QUADS);
-		glNormal3f(0.0f, -1.0f, 0.0f); //Define o vetor normal do chão.
-		glVertex3f( 20,  -0.5,   20);   //Superior esquerdo
-		glVertex3f(-20,  -0.5,   20);   //Inferior esquerdo
-		glVertex3f(-20,  -0.5,  -20);   //Superior direito
-		glVertex3f( 20,  -0.5,  -20);   //Inferior direito.
-       glEnd();
-   glPopMatrix();
+       glPushMatrix();
+            //Definição dos vertices do cubo que forma o chão
+        glBegin(GL_QUADS);
+            glNormal3f(0.0f, -1.0f, 0.0f); //Define o vetor normal do chão.
+            glVertex3f( 20,  -0.5,   20);   //Superior esquerdo
+            glVertex3f(-20,  -0.5,   20);   //Inferior esquerdo
+            glVertex3f(-20,  -0.5,  -20);   //Superior direito
+            glVertex3f( 20,  -0.5,  -20);   //Inferior direito.
+           glEnd();
+       glPopMatrix();
 
-   glutPostRedisplay();
+       glutPostRedisplay();
 
 
-}
+    }
 
-void desenhaCubo(int x, int y, int i , int j){
+    void desenhaCubo(int x, int y, int i , int j){
 
-        glColor3ub(0,255,0);
+            glColor3ub(0,255,0);
+            glPushMatrix();
+            glTranslatef(x, 0, y);
+            glutSolidCube(1);
         glPushMatrix();
-		glTranslatef(x, 0, y);
-		glutSolidCube(1);
-	glPushMatrix();
 
-	glutPostRedisplay();
+        glutPostRedisplay();
 
-}
+    }
 
 
 
-void desenhaLabirinto(int Mat[LINHAS][COLUNAS]){
+    void desenhaLabirinto(int Mat[LINHAS][COLUNAS]){
 
-	int x0, x, y0, y;
-	for(int i = 0; i < LINHAS; i++){
-	    for(int j = 0; j < COLUNAS; j++){
-		x0 = (int)i % 32;
-		y0 = (int)i / 32;
-		x  = (int)j % 32;
-		y  = (int)j / 32;
-		mapa.x = x0;
-		mapa.y = y0;  
-		if(Mat[i][j] == 0){
-			
-		}
-    	     }
-	}
-	
+        int x0, x, y0, y;
+        for(int i = 0; i < LINHAS; i++){
+            for(int j = 0; j < COLUNAS; j++){
+            x0 = (int)i % 32;
+            y0 = (int)i / 32;
+            x  = (int)j % 32;
+            y  = (int)j / 32;
+            mapa.x = x0;
+            mapa.y = y0;  
+            if(Mat[i][j] == 0){
+                
+            }
+                 }
+        }
+        
 
-	glutPostRedisplay();
+        glutPostRedisplay();
 
-}
+    }
 
 
-void Display()
-{
-   
-   glEnable(GL_DEPTH_TEST);
-   
-   glEnable(GL_LINE_SMOOTH);
-   glEnable(GL_POLYGON_SMOOTH); 
+    void Display()
+    {
+       
+       glEnable(GL_DEPTH_TEST);
+       
+       glEnable(GL_LINE_SMOOTH);
+       glEnable(GL_POLYGON_SMOOTH); 
 
-   glEnable(GL_SMOOTH);
-   glEnable(GL_BLEND);
-   
-   // Inicializa parâmetros de rendering
-    // Define a cor de fundo da janela de visualização como preta
-   glClearColor(1.0, 1.0, 1.0, 1.0); 
+       glEnable(GL_SMOOTH);
+       glEnable(GL_BLEND);
+       
+       // Inicializa parâmetros de rendering
+        // Define a cor de fundo da janela de visualização como preta
+       glClearColor(1.0, 1.0, 1.0, 1.0); 
    
    
    glMatrixMode(GL_PROJECTION);/*glMatrixMode()- define qual matriz será alterada. SEMPRE defina o tipo de apresentação 

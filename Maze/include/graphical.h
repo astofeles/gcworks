@@ -2,15 +2,19 @@
 #define _MAZE_GRAPHICAL_H
 
 /* Convension:
- * - The maze plane is in XZ plane, with
- * Y axe being the depth axe pointed upwards
- * - The maze is composed by NxN cells (#),
- *   where each cell is primary sized 1.
+ * - The maze plane is in XZ plane, with Y axe being the depth axe pointed upwards
+ *
+ *           Y
+ *           |
+ *           |
+ *          / `-._
+ *         /      ` Z
+ *        X
+ *
+ * - The maze is composed by NxN cells (#), where each cell is primary sized 1.
  *   Therefore the maze is sized NxN
- * - The maze matrix index is prop-equivalent
- *   to the maze cells mapped i:x and j:z.
- *   That is, m[i][j] represents cell '#' in
- *   x=ki , z = kj , to some k.
+ * - The maze matrix index is prop-equivalent to the maze cells mapped i:x and j:z.
+ *   That is, m[i][j] represents cell '#' in x=ki , z = kj , to some k.
  *
  * z
  * ^
@@ -20,16 +24,39 @@
  * | #######
  * `----------> x
  *
+ * - Matrix index convension for the map follows:
+ *
+ * Notation: [i,j]
+ *
+ * z (i)
+ * ^
+ * |[N,0] [N,1] ... [N,N]
+ * | ...             ...
+ * |[1,0] [1,1] ... [1,N]
+ * |[0,0] [0,1] ... [0,N]
+ * `----------------------> x (j)
+ *
+ * Notes:
+ * [i+1,j] -> goto north
+ * [i,j+1] -> goto east
+ * [i-1,j] -> goto south
+ * [i,j-1] -> goto west
+ *
+ * - The cell drawing convension can be seen in the drawCell
+ *   implementation. see 'graphical.c'
+ *
  */
+
+#include "config.h"
 
 /* draws the maze floor based on the number n */
 extern void drawFloor(int);
 
 /* draws the map based on the maze matrix */
-extern void drawMap(int **, int);
+extern void drawMap(int[complexity][complexity], int);
 
 /* draws the full maze field */
-extern void drawMaze(int **, int);
+extern void drawMaze(int[complexity][complexity], int);
 
 extern void drawPlayer();
 
@@ -38,5 +65,8 @@ extern void drawPlayer();
 extern void drawCell(int);
 
 extern void drawGraph(int**, int);
+
+/* It uses the opengl to set the camera in the correct way */
+extern void setCamera();
 
 #endif

@@ -1,6 +1,13 @@
 #ifndef _MAZE_H
 #define _MAZE_H
 
+#include "config.h"
+
+/* These are the flags definied to the map maze system
+ * 0b0001 -> EAST
+ * 0b0010 -> NORTH
+ * 0b0100 -> WEST
+ * 0b1000 -> SOUTH */
 #define EAST    1
 #define NORTH   2
 #define WEST    4
@@ -12,18 +19,20 @@ struct {
     float lx, ly, lz;
     float aperture, prop, min, max;
     float xmin, xmax, ymin, ymax, zmin, zmax;
+    float speed;
     enum {
         PERSP,
         ORTHO
     } mode;
 } camera;
 
-typedef int * maze_field;
+/* This is the global map matrix of the maze */
+int map[complexity][complexity];
 
-extern void create_maze(int **graph, int n);
-
-extern void setCamera();
-
+/* It initializes the camera with some default values */
 extern void initCamera();
+
+/* It initializes the global maze map */
+extern void mazeMapInit();
 
 #endif

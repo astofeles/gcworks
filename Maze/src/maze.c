@@ -6,15 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <GL/freeglut.h>
-
-void setCamera() {
-    if (camera.mode == PERSP) {
-        gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
-    } else {
-        glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
-    } 
-    gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 0, 1, 0);
-}
+#include "util.h" // backgen
+#include "config.h" // winwidth, winheight
 
 void initCamera() {
     // initial camera settings
@@ -28,7 +21,7 @@ void initCamera() {
     camera.lz = 0;
     // perspective properties
     camera.aperture = 45;
-    camera.prop = 1;
+    camera.prop = (float) winwidth / winheight;
     camera.min = 1;
     camera.max = 100;
     // orthogonal properties
@@ -39,7 +32,13 @@ void initCamera() {
     camera.zmin = 0;
     camera.zmax = 32;
     // camera mode (PERSP or ORTHO)
-    camera.mode = ORTHO;
+    camera.mode = PERSP;
+    // camera gaming properties
+    camera.speed = 1.0;
+}
+
+void mazeMapInit() {
+    backgen(map, complexity);
 }
 
 #endif

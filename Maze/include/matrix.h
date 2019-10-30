@@ -11,10 +11,10 @@
  */
 
 /* One single node, that is, non-zero cell, of the matrix */
-extern struct _SSSMatrixNode;
+struct _SSSMatrixNode;
 
 /* The matrix structure itself */
-extern struct _SSSMatrix;
+struct _SSSMatrix;
 
 typedef struct _SSSMatrixNode sssmatrix_node;
 typedef struct _SSSMatrix sssmatrix;

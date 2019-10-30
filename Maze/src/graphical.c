@@ -12,7 +12,8 @@
 void drawFloor(int n) {
     glPushMatrix();
     glColor3f(floorcolor);
-    glScalef(n, 0, n);
+    glScalef(n, 0.1, n);
+    glTranslatef(0.5, 0, 0.5);
     glutSolidCube(1);
     glPopMatrix();
 }
@@ -28,13 +29,13 @@ void drawCell(int cell) {
     //
     // .7        .6         .5
     //    ,---,---,---,---,
-    //    |NE | NORTH | NW|
+    //    |NW | NORTH | NE|
     //    |---+---+---+---|
-    //    | E |   |   | W |
-    // .8 |-A-+---+---+-E-| .4
+    //    | W |   |   | E |
+    // .8 |-E-+---+---+-A-| .4
     //    | S |   |   | S |
     //    |---+---+---+---|
-    //    |SE | SOUTH | SW|
+    //    |SW | SOUTH | SE|
     //    '---'---'---'---'
     // .1        .2         .3
     //
@@ -50,18 +51,18 @@ void drawCell(int cell) {
         glutSolidCube(1);
         glPopMatrix();
     }
-    // south-west corner (aways)
+    // south-east corner (aways)
     glTranslatef(1.5, 0, 0);
     glutSolidCube(1);
-    // west wall (not aways)
+    // east wall (not aways)
     glTranslatef(0, 0, 1.5);
-    if (cell & WEST) {
+    if (cell & EAST) {
         glPushMatrix();
         glScalef(1, 1, 2);
         glutSolidCube(1);
         glPopMatrix();
     }
-    // north-west corner (aways)
+    // north-east corner (aways)
     glTranslatef(0, 0, 1.5);
     glutSolidCube(1);
     // north wall (not aways)
@@ -75,9 +76,9 @@ void drawCell(int cell) {
     // north-east corner (aways)
     glTranslatef(-1.5, 0, 0);
     glutSolidCube(1);
-    // east corner (not aways)
+    // west corner (not aways)
     glTranslatef(0, 0, -1.5);
-    if (cell & EAST) {
+    if (cell & WEST) {
         glPushMatrix();
         glScalef(1, 1, 2);
         glutSolidCube(1);
@@ -86,8 +87,11 @@ void drawCell(int cell) {
     glPopMatrix();
 }
 
-/* draws the map based on the maze matrix */
-void drawMap(int ** map, int n) {
+/* Draws the map based on the maze matrix
+ * 
+ * Note that it follows the convension. see 'graphical.h'
+ */
+void drawMap(int map[complexity][complexity], int n) {
     int i, j;
     glPushMatrix();
     for (i = 0; i < n; i++) {
@@ -102,12 +106,22 @@ void drawMap(int ** map, int n) {
     glPopMatrix();
 }
 
-void drawMaze(int **map, int n) {
+void drawMaze(int map[complexity][complexity], int n) {
     glPushMatrix();
     drawFloor(n);
     glScalef(1, wallheight, 1);
     drawMap(map, n);
     glPopMatrix();
+}
+
+/* It uses the opengl to set the camera in the correct way */
+void setCamera() {
+    if (camera.mode == PERSP) {
+        gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
+    } else {
+        glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
+    } 
+    gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 0, 1, 0);
 }
 
 #endif

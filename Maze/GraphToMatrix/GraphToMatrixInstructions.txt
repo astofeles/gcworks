@@ -1,0 +1,26 @@
+Os valores de teste usados foram para um grafo "quadrado" de 5 nós por 5 nós, contudo só é necessário mudar os tamanhos das matrizes de acordo.
+Caso deseje testar, basta adcionar uma matriz de adjacencia já pronta ou faze-la na mão, e liberar os printfs que estão comentados para checar.
+
+*Variáveis*
+ -Graph_Adjacency: É a matriz de adjacencia dos grafos (deve ser o primeiro parametro da função)
+  >1 indica adjacencia do nó i ao nó j
+  >nxn onde n é o número de grafos
+ -Labyrinth_Matrix: É a matriz de representação do labirinto (deve ser o segundo parametro da função)
+  >1 = parede / 0 = caminho livre
+  >nxn onde n é a raiz quadrada do número de grafos vezes 2, mais 1
+ -Adjacency_Aux: É a lista de adjacencia de cada vértice do grafo
+  >nx5 onde n é o número de vértices no grafo.
+  >Na primeira coluna de cada linha está o número de um nó, e nas demais os nós adjacentes a ele
+ -Line_Aux1 / Line_Aux2: Auxiliares de linhas nas matrizes
+ -Column_Aux1 / Column_Aux2: Auxiliares de colunas nas matrizes
+ -Graph_Node_Count: Auxiliar utilizado para a criação dos caminhos livres do labirinto usando a lista de adjacencia
+
+*Passos*
+ 1-Inicia-se a lista de adjacencia colocando -1 em todos as suas posições.
+ 2-Preenche a lista de adjacencia de acordo com a matriz de adjacencia, somente olhando para a parte direita/superior da sua diagonal, garantindo que não haja repetições de caminhos.
+ 3-Inicializa-se a matriz do labirinto, colocando 0 nas posiçoes onde estariam os vértices do grafo, e 1 nas posições retantes.
+ 4-Libera os caminhos livres de acordo com a lista de adjacencia. Nota-se que, a variavel Graph_Node_Count é usado para checar as posições dos nós do grafo no labirinto, a fim de localizar a posição exata relativa para abrir os novos caminhos.
+
+O arquivo .c é o arquivo original onde fiz os testes.
+O arquivo .h é o arquivo da função já otimizada para um labirinto de um grafo quadrado que contenha 32x32 vértices (ou seja, 1024 vértices).
+Nesse último arquivo, a função não tem parâmetros, pois eu não me lembro exatamente como trabalhar com ponteiros em matrizes, então seria necessário adcionar isso e fazer as devidas mudanças nas variáveis.

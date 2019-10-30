@@ -3,10 +3,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "config.h"
 
 /* Defines the structure of a graph edge */
 struct _edge;
 typedef struct _edge edge_t;
+
+/* Generates the maze map with backtrack algorithm */
+extern void backgen(int[complexity][complexity] , int);
+
+/* DEPRECEATED SECTION */
 
 /* Build a vector list of the edges of a simple graph given by its
  * adjacence matrix representation */
@@ -19,7 +25,6 @@ void kruskal(int **graph, int n, int **span);
 int check_cycle(int **graph, int n, int from, int to);
 /* Genrate a graph for the maze of N squared nodes */
 void gen_graph(int **gen, int n);
-/* Convert hexadecimal color to OpenGL integer vector */
-char * hexto3ubv(int);
+
 
 #endif

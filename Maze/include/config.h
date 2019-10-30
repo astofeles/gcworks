@@ -2,9 +2,9 @@
 #define _MAZE_CONFIG_H
 
 /* Game playing */
-#define winwidth        600    /* the screen width resolution */
+#define winwidth        300    /* the screen width resolution */
 #define winheight       300    /* the screen height resolution */
-#define level           3      /* the game level (0: easiest, 5: hardest) */
+#define difficulty      3      /* the game level (0: easiest, 5: hardest) */
 #define sensibility     1.2    /* the mouse motion sensibility */
 /* Maze field */
 #define complexity      32     /* the maze complexity (min: 16, max: 1024) */
@@ -13,5 +13,6 @@
 /* Theme colors */
 #define wallcolor       .3,.8,.1
 #define floorcolor      .8,.4,.2
+#define background      .2,.5,.6
 
 #endif
