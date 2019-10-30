@@ -13,7 +13,7 @@ void initCamera() {
     // initial camera settings
     // camera position
     camera.posx = 16;
-    camera.posy = 32;
+    camera.posy = 16;
     camera.posz = 16;
     // camera lookat
     camera.lx = 16;

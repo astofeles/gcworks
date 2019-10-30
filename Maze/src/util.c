@@ -35,6 +35,7 @@ void backgen(int map[complexity][complexity], int n) {
     map[i][j] |= visited;
     unvisited--;
     printf("DBG: Antes do 'while'\n");
+    // while there are was visited
     while (unvisited > 0) {
         // list the neighbors not visited
         length = 0;
