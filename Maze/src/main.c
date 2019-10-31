@@ -14,11 +14,8 @@ void keyboard(unsigned char, int, int);
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    printf("DBG: Antes initCamera()\n");
     initCamera();   // default camera values
-    printf("DBG: Antes mazeMapInit()\n");
     mazeMapInit();  // create random maze
-    printf("DBG: Depois mazeMapInit()\n");
 
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInit(&argc, argv);
@@ -57,9 +54,8 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glPushMatrix();
-    printf("Antes de 'drawMaze'\n");
+    setLights();
     drawMaze(map, complexity);
-    printf("Depois de 'drawMaze'\n");
     glPopMatrix();
 
     glutSwapBuffers();
@@ -70,20 +66,19 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    if (key == 'w') {
-        printf("DGB: 'w' pressed\n");
-        camera.posx -= 0.5;
-        camera.lx -= 0.5;
-    } else if (key == 's') {
+    if (tolower(key) == 'w') {
         camera.posx += 0.5;
         camera.lx += 0.5;
-    } else if (key == 'a') {
-        camera.posz += 0.5;
-        camera.lz += 0.5;
-    } else if (key == 'd') {
+    } else if (tolower(key) == 's') {
+        camera.posx -= 0.5;
+        camera.lx -= 0.5;
+    } else if (tolower(key) == 'a') {
         camera.posz -= 0.5;
         camera.lz -= 0.5;
-    } else if (key == '\t') {
+    } else if (tolower(key) == 'd') {
+        camera.posz += 0.5;
+        camera.lz += 0.5;
+    } else if (tolower(key) == '\t') {
         if (camera.mode == ORTHO) camera.mode = PERSP;
         else if (camera.mode == PERSP) camera.mode = ORTHO;
     }

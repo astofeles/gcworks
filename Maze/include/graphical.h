@@ -69,4 +69,7 @@ extern void drawGraph(int**, int);
 /* It uses the opengl to set the camera in the correct way */
 extern void setCamera();
 
+/* It sets the lights used */
+extern void setLights();
+
 #endif

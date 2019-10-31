@@ -25,7 +25,7 @@ void drawCell(int cell) {
     glColor3f(wallcolor);
     if ((cell & 0x0f) == 0x0f) {
         glTranslatef(0.5, 0.5, 0.5);
-        glutWireCube(1);
+        glutSolidCube(1);
     } else {
         // one cell will be seen as divided by five:
         // then each little square is 0.20 the square.
@@ -48,46 +48,46 @@ void drawCell(int cell) {
         glScalef(0.2, 1, 0.2);
         // south-east corner (aways)
         glTranslatef(0.5, 0.5, 0.5);
-        glutWireCube(1);
+        glutSolidCube(1);
         // south wall (not aways)
         glTranslatef(2, 0, 0);
         if (cell & SOUTH) {
             glPushMatrix();
             glScalef(3, 1, 1);
-            glutWireCube(1);
+            glutSolidCube(1);
             glPopMatrix();
         }
         // south-east corner (aways)
         glTranslatef(2, 0, 0);
-        glutWireCube(1);
+        glutSolidCube(1);
         // east wall (not aways)
         glTranslatef(0, 0, 2);
         if (cell & EAST) {
             glPushMatrix();
             glScalef(1, 1, 3);
-            glutWireCube(1);
+            glutSolidCube(1);
             glPopMatrix();
         }
         // north-east corner (aways)
         glTranslatef(0, 0, 2);
-        glutWireCube(1);
+        glutSolidCube(1);
         // north wall (not aways)
         glTranslatef(-2, 0, 0);
         if (cell & NORTH) {
             glPushMatrix();
             glScalef(3, 1, 1);
-            glutWireCube(1);
+            glutSolidCube(1);
             glPopMatrix();
         }
         // north-east corner (aways)
         glTranslatef(-2, 0, 0);
-        glutWireCube(1);
+        glutSolidCube(1);
         // west corner (not aways)
         glTranslatef(0, 0, -2);
         if (cell & WEST) {
             glPushMatrix();
             glScalef(1, 1, 3);
-            glutWireCube(1);
+            glutSolidCube(1);
             glPopMatrix();
         }
     }
@@ -129,6 +129,13 @@ void setCamera() {
         glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
     } 
     gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 0, 1, 0);
+}
+
+void setLights() {
+    glPushMatrix();
+    glTranslatef(10, 10, 10);
+    glLightf(GL_LIGHT1, GL_DIFFUSE, 1.5);
+    glPopMatrix();
 }
 
 #endif

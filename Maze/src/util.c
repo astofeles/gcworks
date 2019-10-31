@@ -19,22 +19,18 @@ void backgen(int map[complexity][complexity], int n) {
     struct node {
        int i, j, dir;
     } stack[complexity * complexity], list[4], pop;
-    printf("DBG: Antes dos 'oposite'\n");
     oposite[NORTH] = SOUTH;
     oposite[SOUTH] = NORTH;
     oposite[EAST] = WEST;
     oposite[WEST] = EAST;
-    printf("DBG: Depois dos 'oposite'\n");
     // put wall on everywhere
     for (i = 0; i < n; i++)
         for (j = 0; j < n; j++)
             map[i][j] = ~0 & 0xf;
-    printf("DBG: Depois de setar 'map'\n");
     i = rand() % n;
     j = rand() & n;
     map[i][j] |= visited;
     unvisited--;
-    printf("DBG: Antes do 'while'\n");
     // while there are was visited
     while (unvisited > 0) {
         // list the neighbors not visited

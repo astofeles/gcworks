@@ -25,12 +25,12 @@ void initCamera() {
     camera.min = 1;
     camera.max = 200;
     // orthogonal properties
-    camera.xmin = -16;
-    camera.xmax = 48;
-    camera.ymin = -16;
-    camera.ymax = 48;
-    camera.zmin = -16;
-    camera.zmax = 48;
+    camera.xmin = -8;
+    camera.xmax = 8;
+    camera.ymin = -8;
+    camera.ymax = 8;
+    camera.zmin = -32;
+    camera.zmax = 32;
     // camera mode (PERSP or ORTHO)
     camera.mode = PERSP;
     // camera gaming properties
