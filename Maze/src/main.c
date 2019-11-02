@@ -81,6 +81,9 @@ void keyboard(unsigned char key, int x, int y) {
     } else if (tolower(key) == '\t') {
         if (camera.mode == ORTHO) camera.mode = PERSP;
         else if (camera.mode == PERSP) camera.mode = ORTHO;
+    } else if (tolower(key) == 'q') {
+        glutExit();
+        exit(0);
     }
 
     glutPostRedisplay();
