@@ -40,9 +40,9 @@ void display() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    if (camera.mode == PERSP) {
+    if (camera.mode == THIRD || camera.mode == FIRST) {
         gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
-    } else {
+    } else if (camera.mode == SUP) {
         glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
     } 
 
@@ -79,8 +79,7 @@ void keyboard(unsigned char key, int x, int y) {
         camera.posz += 0.5;
         camera.lz += 0.5;
     } else if (tolower(key) == '\t') {
-        if (camera.mode == ORTHO) camera.mode = PERSP;
-        else if (camera.mode == PERSP) camera.mode = ORTHO;
+        camera.mode = (camera.mode + 1) % 3;
     } else if (tolower(key) == 'q') {
         glutExit();
         exit(0);

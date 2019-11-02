@@ -21,10 +21,15 @@ struct {
     float xmin, xmax, ymin, ymax, zmin, zmax;
     float speed;
     enum {
-        PERSP,
-        ORTHO
+        SUP,
+        THIRD,
+        FIRST
     } mode;
 } camera;
+
+struct {
+    float x, y, radius;
+} player;
 
 /* This is the global map matrix of the maze */
 int map[complexity][complexity];

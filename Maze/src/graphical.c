@@ -121,16 +121,6 @@ void drawMaze(int map[complexity][complexity], int n) {
     glPopMatrix();
 }
 
-/* It uses the opengl to set the camera in the correct way */
-void setCamera() {
-    if (camera.mode == PERSP) {
-        gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
-    } else {
-        glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
-    } 
-    gluLookAt(camera.posx, camera.posy, camera.posz, camera.lx, camera.ly, camera.lz, 0, 1, 0);
-}
-
 void setLights() {
     glPushMatrix();
     glTranslatef(10, 10, 10);

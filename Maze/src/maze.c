@@ -32,7 +32,7 @@ void initCamera() {
     camera.zmin = -32;
     camera.zmax = 32;
     // camera mode (PERSP or ORTHO)
-    camera.mode = PERSP;
+    camera.mode = SUP;
     // camera gaming properties
     camera.speed = 1.0;
 }
