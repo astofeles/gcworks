@@ -57,18 +57,30 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
+    int cell;
+    cell = getMapCell(player.x, player.z);
+    printf("DBG: x,z = %.2f, %.2f\n", player.x, player.z);
+    printf("DBG: %c %c %c %c\n", (cell&SOUTH)?'S':' ', (cell&EAST)?'E':' ', (cell&NORTH)?'N':' ', (cell&WEST)?'W':' ');
     if (tolower(key) == 'w') {
-        camera.posx += 0.5;
-        player.x += 0.5;
+        if (!(cell&EAST)) {
+            camera.posx += 1;
+            player.x += 1;
+        }
     } else if (tolower(key) == 's') {
-        camera.posx -= 0.5;
-        player.x -= 0.5;
+        if (!(cell&WEST)) {
+            camera.posx -= 1;
+            player.x -= 1;
+        }
     } else if (tolower(key) == 'a') {
-        camera.posz -= 0.5;
-        player.z -= 0.5;
+        if (!(cell&SOUTH)) {
+            camera.posz -= 1;
+            player.z -= 1;
+        }
     } else if (tolower(key) == 'd') {
-        camera.posz += 0.5;
-        player.z += 0.5;
+        if (!(cell&NORTH)) {
+            camera.posz += 1;
+            player.z += 1;
+        }
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
     } else if (tolower(key) == 'q') {

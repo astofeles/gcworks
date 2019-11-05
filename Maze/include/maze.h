@@ -13,6 +13,7 @@
 #define WEST    4
 #define SOUTH   8
 
+
 /* This struct defines the properties used by the camera */
 struct {
     float posx, posy, posz;
@@ -29,7 +30,7 @@ struct {
 
 /* Defines the main player struct */
 struct {
-    float x, y, z, radius;     // phisical characteristics
+    float x, y, z, radius;      // phisical characteristics
 } player;
 
 /* This is the global map matrix of the maze */
@@ -43,5 +44,8 @@ extern void initPlayer();
 
 /* It initializes the global maze map */
 extern void mazeMapInit();
+
+/* Returns the value in matrix that references to the given (X,Z) position */
+extern int getMapCell(float, float);
 
 #endif

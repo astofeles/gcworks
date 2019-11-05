@@ -44,10 +44,19 @@ void mazeMapInit() {
 
 void initPlayer() {
     // player phisical
-    player.x = 1;
+    player.x = 0.5;
     player.y = 0;
-    player.z = 1;
+    player.z = 0.5;
     player.radius = ballradius;
+}
+
+
+int getMapCell(float x, float z) {
+    int i, j;
+    i = (int) (z);
+    j = (int) (x);
+    printf("DBG: i,j = %d,%d\n", i, j);
+    return map[i][j];
 }
 
 #endif
