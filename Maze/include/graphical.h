@@ -30,11 +30,12 @@
  *
  * z (i)
  * ^
+ * |
  * |[N,0] [N,1] ... [N,N]
  * | ...             ...
  * |[1,0] [1,1] ... [1,N]
  * |[0,0] [0,1] ... [0,N]
- * `----------------------> x (j)
+ * `------------------------> x (j)
  *
  * Notes:
  * [i+1,j] -> goto north
@@ -48,6 +49,7 @@
  */
 
 #include "config.h"
+#include "maze.h"
 
 /* draws the maze floor based on the number n */
 extern void drawFloor(int);
@@ -58,6 +60,7 @@ extern void drawMap(int[complexity][complexity], int);
 /* draws the full maze field */
 extern void drawMaze(int[complexity][complexity], int);
 
+/* draws the main player */
 extern void drawPlayer();
 
 /* draws a given cell of the maze as an 4 bit written in the form:
@@ -68,5 +71,11 @@ extern void drawGraph(int**, int);
 
 /* It sets the lights used */
 extern void setLights();
+
+/* It sets the camera */
+extern void setCamera();
+
+/* It draws the player */
+extern void drawPlayer();
 
 #endif

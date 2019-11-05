@@ -27,8 +27,9 @@ struct {
     } mode;
 } camera;
 
+/* Defines the main player struct */
 struct {
-    float x, y, radius;
+    float x, y, z, radius;     // phisical characteristics
 } player;
 
 /* This is the global map matrix of the maze */
@@ -36,6 +37,9 @@ int map[complexity][complexity];
 
 /* It initializes the camera with some default values */
 extern void initCamera();
+
+/* It initializes the player */
+extern void initPlayer();
 
 /* It initializes the global maze map */
 extern void mazeMapInit();

@@ -6,19 +6,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <GL/freeglut.h>
-#include "util.h" // backgen
-#include "config.h" // winwidth, winheight
+#include "util.h"       // backgen
+#include "config.h"     // winwidth, winheight, playercolor,
+                        // ballradius, 
 
 void initCamera() {
     // initial camera settings
     // camera position
-    camera.posx = 16;
+    camera.posx = player.x;
     camera.posy = 16;
-    camera.posz = 16;
+    camera.posz = player.z;
     // camera lookat
-    camera.lx = 16;
+    camera.lx = player.x;
     camera.ly = 0;
-    camera.lz = 16;
+    camera.lz = player.z;
     // perspective properties
     camera.aperture = 45;
     camera.prop = ((float) winwidth) / winheight;
@@ -39,6 +40,14 @@ void initCamera() {
 
 void mazeMapInit() {
     backgen(map, complexity);
+}
+
+void initPlayer() {
+    // player phisical
+    player.x = 1;
+    player.y = 0;
+    player.z = 1;
+    player.radius = ballradius;
 }
 
 #endif

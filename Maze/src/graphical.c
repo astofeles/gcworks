@@ -128,4 +128,26 @@ void setLights() {
     glPopMatrix();
 }
 
+/* It draws the player */
+void drawPlayer() {
+    glPushMatrix();
+    glColor3f(playercolor);
+    glTranslatef(player.x, player.radius, player.z);
+    glScalef(player.radius, player.radius, player.radius);
+    glutSolidCube(1);
+    glPopMatrix();
+}
+
+void setCamera() {
+    if (camera.mode == THIRD || camera.mode == FIRST) {
+        gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
+    } else if (camera.mode == SUP) {
+        glOrtho(camera.xmin, camera.xmax, camera.ymin, camera.ymax, camera.zmin, camera.zmax);
+    } 
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(camera.posx, camera.posy, camera.posz, player.x, 0, player.z, 1, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
 #endif
