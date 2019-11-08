@@ -61,22 +61,22 @@ void keyboard(unsigned char key, int x, int y) {
     cell = getMapCell(player.x, player.z);
     printf("DBG: x,z = %.2f, %.2f\n", player.x, player.z);
     printf("DBG: %c %c %c %c\n", (cell&SOUTH)?'S':' ', (cell&EAST)?'E':' ', (cell&NORTH)?'N':' ', (cell&WEST)?'W':' ');
-    if (tolower(key) == 'w') {
+    if (tolower(key) == 'w' && option != 2 && option != 1) {
         if (!(cell&EAST)) {
             camera.posx += 1;
             player.x += 1;
         }
-    } else if (tolower(key) == 's') {
+    } else if (tolower(key) == 's' && option != 2 && option != 1) {
         if (!(cell&WEST)) {
             camera.posx -= 1;
             player.x -= 1;
         }
-    } else if (tolower(key) == 'a') {
+    } else if (tolower(key) == 'a' && option != 2 && option != 1) {
         if (!(cell&SOUTH)) {
             camera.posz -= 1;
             player.z -= 1;
         }
-    } else if (tolower(key) == 'd') {
+    } else if (tolower(key) == 'd' && option != 2 && option != 1) {
         if (!(cell&NORTH)) {
             camera.posz += 1;
             player.z += 1;
@@ -124,7 +124,6 @@ void messages(int flag){
       	}else if(flag == 1){
 	       glPushMatrix();	
 		 glColor3ub(255,255,255);
-		 text( 6, 0, 0,  "Metro de Sao Paulo");
 		 text( 5, 0, 0,  "Pressione a barra da iniciar");
 		 text( 4, 0, 0,  "Controles:        ");
 	 	 text( 3, 0, 0,  "'w' - move para cima");
