@@ -73,11 +73,16 @@ int colide(float x, float z) {
     cell = getMapCell(x, z);
     dx = x - (int)x;
     dz = z - (int)z;
-    printf("DBG: dx,dz = %.2f,%.2f\n", dx, dz);
+    // walls bitwise verification
     if (dx - ballradius <= 0.2 && (cell&WEST)) ret |= WEST;
     if (dx + ballradius >= 0.8 && (cell&EAST)) ret |= EAST;
     if (dz - ballradius <= 0.2 && (cell&SOUTH)) ret |= SOUTH;
     if (dz + ballradius >= 0.8 && (cell&NORTH)) ret |= NORTH;
+    // corners bitwise verification
+    if (dx - ballradius <= 0.2 && dz - ballradius <= 0.2) ret |= (WEST | SOUTH);
+    if (dx - ballradius <= 0.2 && dz + ballradius >= 0.8) ret |= (WEST | NORTH);
+    if (dx + ballradius >= 0.8 && dz - ballradius <= 0.2) ret |= (EAST | SOUTH);
+    if (dx + ballradius >= 0.8 && dz + ballradius >= 0.8) ret |= (EAST | NORTH);
     return ret;
 }
 

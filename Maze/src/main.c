@@ -3,10 +3,13 @@
 #include <time.h>
 #include <GL/freeglut.h>
 #include <ctype.h>
+#include <math.h>
 #include "util.h"
 #include "maze.h"       // mazeMapInit, initCamera, map
 #include "graphical.h"  // drawMaze, setCamera
 #include "config.h"     // background, complexity
+
+#define ERROR() (error(__FILE__,__LINE__))
 
 void display();
 void mouse(int, int, int, int);
@@ -74,22 +77,53 @@ void motion(int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    int cell;
+    int col;
+    float xi, zi;
+    xi = player.x;
+    zi = player.z;
     if (tolower(key) == 'w') {
-        if (colide(player.x + player.speed, player.z) != EAST) {
-            player.x += player.speed;
+        if (camera.mode == SUP) {
+            xi += player.speed;
+        } else if (camera.mode == THIRD) {
+            xi += player.speed * cosf(camera.angle * M_PI / 180);
+            zi += player.speed * sinf(camera.angle * M_PI / 180);
+        } else if (camera.mode == FIRST){
+            // TODO: resolve first person
+        } else {
+            ERROR();
         }
     } else if (tolower(key) == 's') {
-        if (colide(player.x - player.speed, player.z) != WEST) {
-            player.x -= player.speed;
+        if (camera.mode == SUP) {
+            xi -= player.speed;
+        } else if (camera.mode == THIRD) {
+            xi -= player.speed * cosf(camera.angle * M_PI / 180);
+            zi -= player.speed * sinf(camera.angle * M_PI / 180);
+        } else if (camera.mode == FIRST){
+            // TODO: resolve first person
+        } else {
+            ERROR();
         }
     } else if (tolower(key) == 'a') {
-        if (colide(player.x, player.z - player.speed) != SOUTH) {
-            player.z -= player.speed;
+        if (camera.mode == SUP) {
+            zi -= player.speed;
+        } else if (camera.mode == THIRD) {
+            xi += player.speed * sinf(camera.angle * M_PI / 180);
+            zi -= player.speed * cosf(camera.angle * M_PI / 180);
+        } else if (camera.mode == FIRST){
+            // TODO: resolve first person
+        } else {
+            ERROR();
         }
     } else if (tolower(key) == 'd') {
-        if (colide(player.x, player.z + player.speed) != NORTH) {
-            player.z += player.speed;
+        if (camera.mode == SUP) {
+            zi += player.speed;
+        } else if (camera.mode == THIRD) {
+            xi -= player.speed * sinf(camera.angle * M_PI / 180);
+            zi += player.speed * cosf(camera.angle * M_PI / 180);
+        } else if (camera.mode == FIRST){
+            // TODO: resolve first person
+        } else {
+            ERROR();
         }
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
@@ -97,7 +131,14 @@ void keyboard(unsigned char key, int x, int y) {
         glutExit();
         exit(0);
     } else {
-        fprintf(stderr, "Error! See file %s: line %d: command not found.\n", __FILE__, __LINE__);
+        ERROR();
+    }
+
+    if (!colide(xi, player.z)) {
+        player.x = xi;
+    }
+    if (!colide(player.x, zi)) {
+        player.z = zi;
     }
 
     glutPostRedisplay();
