@@ -1,23 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <GL/freeglut.h>    // gl*, glut*, glu*
+#include <GL/freeglut.h>
 #include <ctype.h>
-#include <math.h>
-#include "util.h"       // ERROR
-#include "maze.h"       // mazeMapInit, initCamera, initPlayer, map
-#include "graphical.h"  // drawMaze, setCamera
-#include "config.h"     // background, complexity, thename
+#include <string.h>
+#include "util.h"
+#include "maze.h"      // mazeMapInit, initCamera
+#include "graphical.h" // drawMaze, setCamera
+#include "config.h"
 
-// functions prototypes
 void display();
 void mouse(int, int, int, int);
-void motion(int, int);
-void special(int, int, int);
 void keyboard(unsigned char, int, int);
+void messages(int);
 
-// global variables
-int firstmov = 1;
+int option = 1;
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
@@ -29,12 +26,10 @@ int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
-    glutCreateWindow(thename);
+    glutCreateWindow("A Maze");
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
-    glutSpecialFunc(special);
     glutMouseFunc(mouse);
-    glutPassiveMotionFunc(motion);
     glutMainLoop();
 
     return 0;
@@ -52,115 +47,109 @@ void display() {
 
     setCamera();
 
-    glPushMatrix();
-    setLights();
-    drawMaze(map, complexity);
-    drawPlayer();
-    glPopMatrix();
+    messages(option);
 
     glutSwapBuffers();
 }
 
 void mouse(int button, int state, int x, int y) {
-    firstmov = 1;
-    glutPostRedisplay();
-}
 
-void motion(int x, int y) {
-    static int x0 = 0, y0 = 0;
-    int dx, dy;
-    if (!firstmov) {
-        dx = x - x0;
-        dy = y - y0;
-        if (camera.mode == THIRD) {
-            camera.angle += dx;
-        } else if (camera.mode == FIRST) {
-            camera.angle -= dx;
-        }
-    }
-    x0 = x;
-    y0 = y;
-    firstmov = 0;
-    glutPostRedisplay();
-}
-
-void special(int key, int x, int y)  {
-    if (key == GLUT_KEY_UP)
-        keyboard('w', x, y);
-    else if (key == GLUT_KEY_DOWN)
-        keyboard('s', x, y);
-    else if (key == GLUT_KEY_LEFT)
-        keyboard('a', x, y);
-    else if (GLUT_KEY_RIGHT)
-        keyboard('d', x, y);
-    else
-        ERROR("Command not found");
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    float xi, zi;
-    xi = player.x;
-    zi = player.z;
+    int cell;
+    cell = getMapCell(player.x, player.z);
+    printf("DBG: x,z = %.2f, %.2f\n", player.x, player.z);
+    printf("DBG: %c %c %c %c\n", (cell&SOUTH)?'S':' ', (cell&EAST)?'E':' ', (cell&NORTH)?'N':' ', (cell&WEST)?'W':' ');
     if (tolower(key) == 'w') {
-        // superior view
-        if (camera.mode == SUP) {
-            xi += player.speed;
-        // third person view
-        } else if (camera.mode == THIRD) {
-            xi += player.speed * cosf(camera.angle * M_PI / 180);
-            zi += player.speed * sinf(camera.angle * M_PI / 180);
-        } else if (camera.mode == FIRST){
-            // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
+        if (!(cell&EAST)) {
+            camera.posx += 1;
+            player.x += 1;
         }
     } else if (tolower(key) == 's') {
-        // superior view
-        if (camera.mode == SUP) {
-            xi -= player.speed;
-        // third person view
-        } else if (camera.mode == THIRD) {
-            xi -= player.speed * cosf(camera.angle * M_PI / 180);
-            zi -= player.speed * sinf(camera.angle * M_PI / 180);
-        } else if (camera.mode == FIRST){
-            // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
+        if (!(cell&WEST)) {
+            camera.posx -= 1;
+            player.x -= 1;
         }
     } else if (tolower(key) == 'a') {
-        // superior view
-        if (camera.mode == SUP) {
-            zi -= player.speed;
-        } else if (camera.mode == THIRD) {
-            xi += player.speed * sinf(camera.angle * M_PI / 180);
-            zi -= player.speed * cosf(camera.angle * M_PI / 180);
-        } else if (camera.mode == FIRST){
-            // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
+        if (!(cell&SOUTH)) {
+            camera.posz -= 1;
+            player.z -= 1;
         }
     } else if (tolower(key) == 'd') {
-        if (camera.mode == SUP) {
-            zi += player.speed;
-        } else if (camera.mode == THIRD) {
-            xi -= player.speed * sinf(camera.angle * M_PI / 180);
-            zi += player.speed * cosf(camera.angle * M_PI / 180);
-        } else if (camera.mode == FIRST){
-            // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
+        if (!(cell&NORTH)) {
+            camera.posz += 1;
+            player.z += 1;
         }
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
     } else if (tolower(key) == 'q') {
         glutExit();
         exit(0);
-    } else {
-        ERROR("Command not found");
-    }
+    }else if(key == ' '){
+	option = 0;
 
-    if (!colide(xi, player.z)) player.x = xi;
-    if (!colide(player.x, zi)) player.z = zi;
+    }else if(tolower(key) == 'p'){
+	option = 2;
+
+    }
 
     glutPostRedisplay();
 }
+
+void text(float s, float d, float f, char *string){
+
+	//Coloca o texto na janela utilizando-se das coordenadas x ,y, z
+	glRasterPos3f(s,d,f);
+	int len=strlen(string);
+	for(int i = 0; i < len; i++){
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+	
+	}	
+
+	glutPostRedisplay();
+
+}
+
+
+void messages(int flag){
+
+	if(flag == 0){
+		glPushMatrix();
+      		 setLights();
+     	 	 drawMaze(map, complexity);
+      		 drawPlayer();
+    		glPopMatrix();
+		
+      	}else if(flag == 1){
+	       glPushMatrix();	
+		 glColor3ub(255,255,255);
+		 text( 6, 0, 0,  "Metro de Sao Paulo");
+		 text( 5, 0, 0,  "Pressione a barra da iniciar");
+		 text( 4, 0, 0,  "Controles:        ");
+	 	 text( 3, 0, 0,  "'w' - move para cima");
+	 	 text( 2, 0, 0,  "'s' - move para tras");
+	 	 text( 1, 0, 0,  "'a' - move para esquerda");
+	 	 text( 0, 0, 0,  "'d' - move para direita");
+		 text(-1, 0, 0,  "'q' - Sair do jogo");
+ 	      glPopMatrix();
+
+	}else if(flag == 2){
+		glPushMatrix();
+		 glColor3ub(255,255,255);
+		 text( 5, 0, 0,  "Pause");
+	 	 text( 4, 0, 0,  "Controles:");
+		 text( 3, 0, 0,  "espaco - para retornar ao jogo");
+	 	 text( 2, 0, 0,  "'w' - move para cima");
+	 	 text( 1, 0, 0,  "'s' - move para tras");
+	 	 text( 0, 0, 0,  "'a' - move para esquerda");
+	 	 text(-1, 0, 0,  "'d' - move para direita");
+		 text(-2, 0, 0,  "'q' - Sair do jogo");
+		glPopMatrix();		  
+
+	}
+
+}
+
+
+
