@@ -16,6 +16,9 @@ void motion(int, int);
 void special(int, int, int);
 void keyboard(unsigned char, int, int);
 
+// global variables
+int firstmov = 1;
+
 int main(int argc, char *argv[]) {
     srand(time(NULL));
     initPlayer();   // default player values
@@ -59,21 +62,25 @@ void display() {
 }
 
 void mouse(int button, int state, int x, int y) {
+    firstmov = 1;
     glutPostRedisplay();
 }
 
 void motion(int x, int y) {
     static int x0 = 0, y0 = 0;
     int dx, dy;
-    dx = x - x0;
-    dy = y - y0;
-    if (camera.mode == THIRD) {
-        camera.angle += dx;
-    } else if (camera.mode == FIRST) {
-        camera.angle -= dx;
+    if (!firstmov) {
+        dx = x - x0;
+        dy = y - y0;
+        if (camera.mode == THIRD) {
+            camera.angle += dx;
+        } else if (camera.mode == FIRST) {
+            camera.angle -= dx;
+        }
     }
     x0 = x;
     y0 = y;
+    firstmov = 0;
     glutPostRedisplay();
 }
 
