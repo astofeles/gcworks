@@ -158,7 +158,7 @@ void setCamera() {
         camera.uz = 0;
     // game in first person mode
     } else if (camera.mode == FIRST) {
-        camera.posy = ballradius;
+        camera.posy = 2*ballradius;
         camera.posx = player.x;
         camera.posz = player.z;
         camera.ly = camera.posy;
