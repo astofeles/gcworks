@@ -4,12 +4,10 @@
 #include <GL/freeglut.h>
 #include <ctype.h>
 #include <math.h>
-#include "util.h"
+#include "util.h"       // error
 #include "maze.h"       // mazeMapInit, initCamera, map
 #include "graphical.h"  // drawMaze, setCamera
-#include "config.h"     // background, complexity
-
-#define ERROR() (error(__FILE__,__LINE__))
+#include "config.h"     // background, complexity, thename
 
 void display();
 void mouse(int, int, int, int);
@@ -26,7 +24,7 @@ int main(int argc, char *argv[]) {
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
-    glutCreateWindow("A Maze");
+    glutCreateWindow(thename);
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
@@ -77,33 +75,37 @@ void motion(int x, int y) {
 }
 
 void keyboard(unsigned char key, int x, int y) {
-    int col;
     float xi, zi;
     xi = player.x;
     zi = player.z;
     if (tolower(key) == 'w') {
+        // superior view
         if (camera.mode == SUP) {
             xi += player.speed;
+        // third person view
         } else if (camera.mode == THIRD) {
             xi += player.speed * cosf(camera.angle * M_PI / 180);
             zi += player.speed * sinf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
         } else {
-            ERROR();
+            ERROR("Invalid camera mode");
         }
     } else if (tolower(key) == 's') {
+        // superior view
         if (camera.mode == SUP) {
             xi -= player.speed;
+        // third person view
         } else if (camera.mode == THIRD) {
             xi -= player.speed * cosf(camera.angle * M_PI / 180);
             zi -= player.speed * sinf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
         } else {
-            ERROR();
+            ERROR("Invalid camera mode");
         }
     } else if (tolower(key) == 'a') {
+        // superior view
         if (camera.mode == SUP) {
             zi -= player.speed;
         } else if (camera.mode == THIRD) {
@@ -112,7 +114,7 @@ void keyboard(unsigned char key, int x, int y) {
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
         } else {
-            ERROR();
+            ERROR("Invalid camera mode");
         }
     } else if (tolower(key) == 'd') {
         if (camera.mode == SUP) {
@@ -123,7 +125,7 @@ void keyboard(unsigned char key, int x, int y) {
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
         } else {
-            ERROR();
+            ERROR("Invalid camera mode");
         }
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
@@ -131,15 +133,11 @@ void keyboard(unsigned char key, int x, int y) {
         glutExit();
         exit(0);
     } else {
-        ERROR();
+        ERROR("Command not found");
     }
 
-    if (!colide(xi, player.z)) {
-        player.x = xi;
-    }
-    if (!colide(player.x, zi)) {
-        player.z = zi;
-    }
+    if (!colide(xi, player.z)) player.x = xi;
+    if (!colide(player.x, zi)) player.z = zi;
 
     glutPostRedisplay();
 }

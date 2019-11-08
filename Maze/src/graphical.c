@@ -177,8 +177,8 @@ void setCamera() {
         camera.ly = 0;
         camera.lx = player.x;
         camera.lz = player.z;
-        camera.xmin = -8;
-        camera.xmax = 8;
+        camera.xmin = -8 * camera.prop;
+        camera.xmax = 8 * camera.prop;
         camera.ymin = -8;
         camera.ymax = 8;
         camera.zmin = -32;
@@ -187,7 +187,7 @@ void setCamera() {
         camera.uy = 0;
         camera.uz = 0;
     } else {
-        fprintf(stderr, "Error! See file %s: line %d: camera mode not defined.\n", __FILE__, __LINE__);
+        ERROR("Invalid camera mode");
     } 
 
     if (camera.mode == THIRD || camera.mode == FIRST) {
@@ -199,7 +199,7 @@ void setCamera() {
             camera.zmin, camera.zmax
         );
     } else {
-        fprintf(stderr, "Error! See file %s: line %d: camera mode not defined.\n", __FILE__, __LINE__);
+        ERROR("Invalid camera mode");
     }
 
     glMatrixMode(GL_MODELVIEW);

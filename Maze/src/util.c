@@ -72,7 +72,7 @@ void backgen(int map[complexity][complexity], int n) {
     }
 }
 
-void error(char const * file, int line) {
-        fprintf(stderr, "Error! See file %s: line %d: command not found.\n", file, line);
+void error(char const * file, int line, char const * msg) {
+        fprintf(stderr, "Error! See file %s: line %d: %s.\n", file, line, msg);
 }
 #endif

@@ -60,7 +60,6 @@ int getMapCell(float x, float z) {
     int i, j;
     i = (int) (z);
     j = (int) (x);
-    printf("DBG: i,j = %d,%d\n", i, j);
     return map[i][j];
 }
 

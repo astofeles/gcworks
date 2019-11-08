@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "config.h"
 
+#define ERROR(m) (error(__FILE__,__LINE__, (m)))
+
 /* Defines the structure of a graph edge */
 struct _edge;
 typedef struct _edge edge_t;
@@ -13,5 +15,5 @@ typedef struct _edge edge_t;
 extern void backgen(int[complexity][complexity] , int);
 
 /* Error messages for the program */
-extern void error(char const *, int);
+extern void error(char const *, int, char const *);
 #endif

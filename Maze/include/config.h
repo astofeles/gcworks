@@ -2,8 +2,9 @@
 #define _MAZE_CONFIG_H
 
 /* Game playing */
+#define thename         "A-maze"    /* the game name */
 #define winwidth        800     /* the screen width resolution */
-#define winheight       800     /* the screen height resolution */
+#define winheight       600     /* the screen height resolution */
 #define difficulty      3       /* the game level (0: easiest, 5: hardest) */
 #define sensibility     1.2     /* the mouse motion sensibility */
 /* Maze field */
