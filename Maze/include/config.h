@@ -9,7 +9,7 @@
 /* Maze field */
 #define complexity      32      /* the maze complexity (min: 16, max: 1024) */
 #define wallheight      1.0     /* the maze wall height */
-#define cellsize        12.0    /* the size of a squared cell of the maze */
+// #define cellsize        12.0    /* the size of a squared cell of the maze */
 /* ball characteristics */
 #define ballradius      0.20    /* the radius os the ball */
 #define hrings          10      /* the number of horizontal rings */

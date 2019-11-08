@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <GL/freeglut.h>
 #include "util.h"       // backgen
 #include "config.h"     // winwidth, winheight, playercolor, ballradius, camheight
@@ -51,6 +52,7 @@ void initPlayer() {
     player.y = 0;
     player.z = 0.5;
     player.radius = ballradius;
+    player.speed = 0.1;
 }
 
 
@@ -60,6 +62,20 @@ int getMapCell(float x, float z) {
     j = (int) (x);
     printf("DBG: i,j = %d,%d\n", i, j);
     return map[i][j];
+}
+
+
+/* checks if a ball in given position colides in the maze */
+int colide(float x, float z, int cell) {
+    float dx, dz;
+    dx = x - (int)x;
+    dz = z - (int)z;
+    printf("DBG: dx,dz = %.2f,%.2f\n", dx, dz);
+    if (dx - ballradius <= 0.2 && (cell&WEST)) return WEST;
+    if (dx + ballradius >= 0.8 && (cell&EAST)) return EAST;
+    if (dz - ballradius <= 0.2 && (cell&SOUTH)) return SOUTH;
+    if (dz + ballradius >= 0.8 && (cell&NORTH)) return NORTH;
+    return NONE;
 }
 
 #endif

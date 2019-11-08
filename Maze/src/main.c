@@ -66,30 +66,28 @@ void keyboard(unsigned char key, int x, int y) {
     printf("DBG: x,z = %.2f, %.2f\n", player.x, player.z);
     printf("DBG: %c %c %c %c\n", (cell&SOUTH)?'S':' ', (cell&EAST)?'E':' ', (cell&NORTH)?'N':' ', (cell&WEST)?'W':' ');
     if (tolower(key) == 'w') {
-        if (!(cell&EAST)) {
-            camera.posx += 1;
-            player.x += 1;
+        if (colide(player.x + player.speed, player.z, cell) != EAST) {
+            player.x += player.speed;
         }
     } else if (tolower(key) == 's') {
-        if (!(cell&WEST)) {
-            camera.posx -= 1;
-            player.x -= 1;
+        if (colide(player.x - player.speed, player.z, cell) != WEST) {
+            player.x -= player.speed;
         }
     } else if (tolower(key) == 'a') {
-        if (!(cell&SOUTH)) {
-            camera.posz -= 1;
-            player.z -= 1;
+        if (colide(player.x, player.z - player.speed, cell) != SOUTH) {
+            player.z -= player.speed;
         }
     } else if (tolower(key) == 'd') {
-        if (!(cell&NORTH)) {
-            camera.posz += 1;
-            player.z += 1;
+        if (colide(player.x, player.z + player.speed, cell) != NORTH) {
+            player.z += player.speed;
         }
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
     } else if (tolower(key) == 'q') {
         glutExit();
         exit(0);
+    } else {
+        fprintf(stderr, "Error! See file %s: line %d: command not found.\n", __FILE__, __LINE__);
     }
 
     glutPostRedisplay();
