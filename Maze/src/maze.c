@@ -7,19 +7,22 @@
 #include <string.h>
 #include <GL/freeglut.h>
 #include "util.h"       // backgen
-#include "config.h"     // winwidth, winheight, playercolor,
-                        // ballradius, 
+#include "config.h"     // winwidth, winheight, playercolor, ballradius, camheight
 
 void initCamera() {
     // initial camera settings
     // camera position
     camera.posx = player.x;
-    camera.posy = 16;
+    camera.posy = camheight;
     camera.posz = player.z;
     // camera lookat
     camera.lx = player.x;
     camera.ly = 0;
     camera.lz = player.z;
+    // upwards settings
+    camera.ux = 1;
+    camera.uz = 0;
+    camera.uy = 0;
     // perspective properties
     camera.aperture = 45;
     camera.prop = ((float) winwidth) / winheight;
@@ -32,7 +35,7 @@ void initCamera() {
     camera.ymax = 8;
     camera.zmin = -32;
     camera.zmax = 32;
-    // camera mode (PERSP or ORTHO)
+    // camera mode (SUP, THIRD or FIRST)
     camera.mode = SUP;
     // camera gaming properties
     camera.speed = 1.0;

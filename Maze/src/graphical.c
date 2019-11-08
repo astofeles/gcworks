@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <GL/freeglut.h>
 #include "maze.h"
 #include "util.h"
@@ -140,6 +141,55 @@ void drawPlayer() {
 
 /* Set up the camera */
 void setCamera() {
+    int h;
+    // game in third person mode
+    if (camera.mode == THIRD) {
+        h = camheight/2; 
+        camera.posy = h;
+        camera.posx = player.x - h/2 * cos(camera.angle);
+        camera.posz = player.z - h/2 * sin(camera.angle);
+        camera.lx = player.x;
+        camera.ly = 0;
+        camera.lz = player.z;
+        camera.min = 1;
+        camera.max = 200;
+        camera.ux = 0;
+        camera.uy = 1;
+        camera.uz = 0;
+    // game in first person mode
+    } else if (camera.mode == FIRST) {
+        camera.posy = ballradius;
+        camera.posx = player.x;
+        camera.posy = player.y;
+        camera.ly = camera.posy;
+        camera.lx = player.x + sin(camera.angle);
+        camera.lz = player.z + cos(camera.angle);
+        camera.min = ballradius;
+        camera.max = 2 * complexity;
+        camera.ux = 0;
+        camera.uy = 1;
+        camera.uz = 0;
+    // game view in superior mode
+    } else if (camera.mode == SUP) {
+        camera.posy = camheight;
+        camera.posx = player.x;
+        camera.posz = player.z;
+        camera.ly = 0;
+        camera.lx = player.x + sin(camera.angle);
+        camera.lz = player.z + cos(camera.angle);
+        camera.xmin = -8;
+        camera.xmax = 8;
+        camera.ymin = -8;
+        camera.ymax = 8;
+        camera.zmin = -32;
+        camera.zmax = 32;
+        camera.ux = 1;
+        camera.uy = 0;
+        camera.uz = 0;
+    } else {
+        fprintf(stderr, "Error! See file %s: line %d: camera mode not defined.\n", __FILE__, __LINE__);
+    } 
+
     if (camera.mode == THIRD || camera.mode == FIRST) {
         gluPerspective(camera.aperture, camera.prop, camera.min, camera.max);
     } else if (camera.mode == SUP) {
@@ -148,13 +198,16 @@ void setCamera() {
             camera.ymin, camera.ymax,
             camera.zmin, camera.zmax
         );
-    } 
+    } else {
+        fprintf(stderr, "Error! See file %s: line %d: camera mode not defined.\n", __FILE__, __LINE__);
+    }
+
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
         camera.posx, camera.posy, camera.posz,
-        player.x, 0, player.z,
-        1, 0, 0
+        camera.lx, camera.ly, camera.lz,
+        camera.ux, camera.uy, camera.uz
     );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

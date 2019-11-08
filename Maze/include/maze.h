@@ -18,9 +18,11 @@
 struct {
     float posx, posy, posz;
     float lx, ly, lz;
+    float ux, uy, uz;
     float aperture, prop, min, max;
     float xmin, xmax, ymin, ymax, zmin, zmax;
     float speed;
+    int angle;
     enum {
         SUP,
         THIRD,

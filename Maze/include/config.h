@@ -16,6 +16,8 @@
 #define vrings          10      /* the number of vertical rings */
 #define minspeed        0.1     /* the minimum speed */
 #define maxspeed        0.8     /* the maximum speed */
+/* camera defaults */
+#define camheight       16      /* the default camera height */
 /* Theme colors */
 #define wallcolor       .6,.6,.5
 #define floorcolor      .4,.4,.3

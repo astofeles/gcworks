@@ -4,9 +4,9 @@
 #include <GL/freeglut.h>
 #include <ctype.h>
 #include "util.h"
-#include "maze.h" // mazeMapInit, initCamera
-#include "graphical.h" // drawMaze, setCamera
-#include "config.h"
+#include "maze.h"       // mazeMapInit, initCamera, map
+#include "graphical.h"  // drawMaze, setCamera
+#include "config.h"     // background, complexity
 
 void display();
 void mouse(int, int, int, int);
@@ -53,6 +53,10 @@ void display() {
 }
 
 void mouse(int button, int state, int x, int y) {
+    static int x0, y0;
+    int dx, dy;
+    dx = x - x0;
+    dy = y - y0;
 
 }
 
