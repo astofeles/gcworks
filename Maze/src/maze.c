@@ -66,16 +66,19 @@ int getMapCell(float x, float z) {
 
 
 /* checks if a ball in given position colides in the maze */
-int colide(float x, float z, int cell) {
+int colide(float x, float z) {
     float dx, dz;
+    int cell, ret;
+    ret = NONE;
+    cell = getMapCell(x, z);
     dx = x - (int)x;
     dz = z - (int)z;
     printf("DBG: dx,dz = %.2f,%.2f\n", dx, dz);
-    if (dx - ballradius <= 0.2 && (cell&WEST)) return WEST;
-    if (dx + ballradius >= 0.8 && (cell&EAST)) return EAST;
-    if (dz - ballradius <= 0.2 && (cell&SOUTH)) return SOUTH;
-    if (dz + ballradius >= 0.8 && (cell&NORTH)) return NORTH;
-    return NONE;
+    if (dx - ballradius <= 0.2 && (cell&WEST)) ret |= WEST;
+    if (dx + ballradius >= 0.8 && (cell&EAST)) ret |= EAST;
+    if (dz - ballradius <= 0.2 && (cell&SOUTH)) ret |= SOUTH;
+    if (dz + ballradius >= 0.8 && (cell&NORTH)) ret |= NORTH;
+    return ret;
 }
 
 #endif

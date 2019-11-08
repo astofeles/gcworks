@@ -53,6 +53,6 @@ extern void mazeMapInit();
 extern int getMapCell(float, float);
 
 /* checks if a ball in given position colides in the maze */
-extern int colide(float, float, int);
+extern int colide(float, float);
 
 #endif

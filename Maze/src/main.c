@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
-    glutMotionFunc(motion);
+    glutPassiveMotionFunc(motion);
     glutMainLoop();
 
     return 0;
@@ -59,11 +59,15 @@ void mouse(int button, int state, int x, int y) {
 }
 
 void motion(int x, int y) {
-    static int x0, y0;
+    static int x0 = 0, y0 = 0;
     int dx, dy;
     dx = x - x0;
     dy = y - y0;
-    camera.angle += dx;
+    if (camera.mode == THIRD) {
+        camera.angle += dx;
+    } else if (camera.mode == FIRST) {
+        camera.angle -= dx;
+    }
     x0 = x;
     y0 = y;
     glutPostRedisplay();
@@ -71,23 +75,20 @@ void motion(int x, int y) {
 
 void keyboard(unsigned char key, int x, int y) {
     int cell;
-    cell = getMapCell(player.x, player.z);
-    printf("DBG: x,z = %.2f, %.2f\n", player.x, player.z);
-    printf("DBG: %c %c %c %c\n", (cell&SOUTH)?'S':' ', (cell&EAST)?'E':' ', (cell&NORTH)?'N':' ', (cell&WEST)?'W':' ');
     if (tolower(key) == 'w') {
-        if (colide(player.x + player.speed, player.z, cell) != EAST) {
+        if (colide(player.x + player.speed, player.z) != EAST) {
             player.x += player.speed;
         }
     } else if (tolower(key) == 's') {
-        if (colide(player.x - player.speed, player.z, cell) != WEST) {
+        if (colide(player.x - player.speed, player.z) != WEST) {
             player.x -= player.speed;
         }
     } else if (tolower(key) == 'a') {
-        if (colide(player.x, player.z - player.speed, cell) != SOUTH) {
+        if (colide(player.x, player.z - player.speed) != SOUTH) {
             player.z -= player.speed;
         }
     } else if (tolower(key) == 'd') {
-        if (colide(player.x, player.z + player.speed, cell) != NORTH) {
+        if (colide(player.x, player.z + player.speed) != NORTH) {
             player.z += player.speed;
         }
     } else if (tolower(key) == '\t') {

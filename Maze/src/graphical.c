@@ -160,7 +160,7 @@ void setCamera() {
     } else if (camera.mode == FIRST) {
         camera.posy = ballradius;
         camera.posx = player.x;
-        camera.posy = player.y;
+        camera.posz = player.z;
         camera.ly = camera.posy;
         camera.lx = player.x + sinf(camera.angle * M_PI / 180);
         camera.lz = player.z + cosf(camera.angle * M_PI / 180);
@@ -175,8 +175,8 @@ void setCamera() {
         camera.posx = player.x;
         camera.posz = player.z;
         camera.ly = 0;
-        camera.lx = player.x + sin(camera.angle);
-        camera.lz = player.z + cos(camera.angle);
+        camera.lx = player.x;
+        camera.lz = player.z;
         camera.xmin = -8;
         camera.xmax = 8;
         camera.ymin = -8;
