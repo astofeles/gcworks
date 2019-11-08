@@ -146,8 +146,8 @@ void setCamera() {
     if (camera.mode == THIRD) {
         h = camheight/2; 
         camera.posy = h;
-        camera.posx = player.x - h/2 * cos(camera.angle);
-        camera.posz = player.z - h/2 * sin(camera.angle);
+        camera.posx = player.x - h/2 * cosf(camera.angle * M_PI / 180);
+        camera.posz = player.z - h/2 * sinf(camera.angle * M_PI / 180);
         camera.lx = player.x;
         camera.ly = 0;
         camera.lz = player.z;
@@ -162,8 +162,8 @@ void setCamera() {
         camera.posx = player.x;
         camera.posy = player.y;
         camera.ly = camera.posy;
-        camera.lx = player.x + sin(camera.angle);
-        camera.lz = player.z + cos(camera.angle);
+        camera.lx = player.x + sinf(camera.angle * M_PI / 180);
+        camera.lz = player.z + cosf(camera.angle * M_PI / 180);
         camera.min = ballradius;
         camera.max = 2 * complexity;
         camera.ux = 0;

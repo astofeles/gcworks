@@ -10,6 +10,7 @@
 
 void display();
 void mouse(int, int, int, int);
+void motion(int, int);
 void keyboard(unsigned char, int, int);
 
 int main(int argc, char *argv[]) {
@@ -26,6 +27,7 @@ int main(int argc, char *argv[]) {
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouse);
+    glutMotionFunc(motion);
     glutMainLoop();
 
     return 0;
@@ -53,11 +55,18 @@ void display() {
 }
 
 void mouse(int button, int state, int x, int y) {
+    glutPostRedisplay();
+}
+
+void motion(int x, int y) {
     static int x0, y0;
     int dx, dy;
     dx = x - x0;
     dy = y - y0;
-
+    camera.angle += dx;
+    x0 = x;
+    y0 = y;
+    glutPostRedisplay();
 }
 
 void keyboard(unsigned char key, int x, int y) {
