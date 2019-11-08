@@ -1,17 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <GL/freeglut.h>
+#include <GL/freeglut.h>    // gl*, glut*, glu*
 #include <ctype.h>
 #include <math.h>
-#include "util.h"       // error
-#include "maze.h"       // mazeMapInit, initCamera, map
+#include "util.h"       // ERROR
+#include "maze.h"       // mazeMapInit, initCamera, initPlayer, map
 #include "graphical.h"  // drawMaze, setCamera
 #include "config.h"     // background, complexity, thename
 
+// functions prototypes
 void display();
 void mouse(int, int, int, int);
 void motion(int, int);
+void special(int, int, int);
 void keyboard(unsigned char, int, int);
 
 int main(int argc, char *argv[]) {
@@ -27,6 +29,7 @@ int main(int argc, char *argv[]) {
     glutCreateWindow(thename);
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(special);
     glutMouseFunc(mouse);
     glutPassiveMotionFunc(motion);
     glutMainLoop();
@@ -72,6 +75,19 @@ void motion(int x, int y) {
     x0 = x;
     y0 = y;
     glutPostRedisplay();
+}
+
+void special(int key, int x, int y)  {
+    if (key == GLUT_KEY_UP)
+        keyboard('w', x, y);
+    else if (key == GLUT_KEY_DOWN)
+        keyboard('s', x, y);
+    else if (key == GLUT_KEY_LEFT)
+        keyboard('a', x, y);
+    else if (GLUT_KEY_RIGHT)
+        keyboard('d', x, y);
+    else
+        ERROR("Command not found");
 }
 
 void keyboard(unsigned char key, int x, int y) {

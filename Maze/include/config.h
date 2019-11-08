@@ -4,13 +4,12 @@
 /* Game playing */
 #define thename         "A-maze"    /* the game name */
 #define winwidth        800     /* the screen width resolution */
-#define winheight       600     /* the screen height resolution */
+#define winheight       800     /* the screen height resolution */
 #define difficulty      3       /* the game level (0: easiest, 5: hardest) */
 #define sensibility     1.2     /* the mouse motion sensibility */
 /* Maze field */
 #define complexity      32      /* the maze complexity (min: 16, max: 1024) */
 #define wallheight      1.0     /* the maze wall height */
-// #define cellsize        12.0    /* the size of a squared cell of the maze */
 /* ball characteristics */
 #define ballradius      0.20    /* the radius os the ball */
 #define hrings          10      /* the number of horizontal rings */
