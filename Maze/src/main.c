@@ -53,9 +53,9 @@ void display() {
     setCamera();
 
     glPushMatrix();
-    setLights();
-    drawMaze(map, complexity);
-    drawPlayer();
+        setLights();
+        drawMaze(map, complexity);
+        drawPlayer();
     glPopMatrix();
 
     glutSwapBuffers();
@@ -111,10 +111,8 @@ void keyboard(unsigned char key, int x, int y) {
             zi += player.speed * sinf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
-        }
-    } else if (tolower(key) == 's') {
+        }     } 
+    if (tolower(key) == 's') {
         // superior view
         if (camera.mode == SUP) {
             xi -= player.speed;
@@ -124,10 +122,8 @@ void keyboard(unsigned char key, int x, int y) {
             zi -= player.speed * sinf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
-        }
-    } else if (tolower(key) == 'a') {
+        }     } 
+    if (tolower(key) == 'a') {
         // superior view
         if (camera.mode == SUP) {
             zi -= player.speed;
@@ -136,10 +132,8 @@ void keyboard(unsigned char key, int x, int y) {
             zi -= player.speed * cosf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
-        }
-    } else if (tolower(key) == 'd') {
+        }     } 
+    if (tolower(key) == 'd') {
         if (camera.mode == SUP) {
             zi += player.speed;
         } else if (camera.mode == THIRD) {
@@ -147,16 +141,12 @@ void keyboard(unsigned char key, int x, int y) {
             zi += player.speed * cosf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        } else {
-            ERROR("Invalid camera mode");
-        }
+        } 
     } else if (tolower(key) == '\t') {
         camera.mode = (camera.mode + 1) % 3;
     } else if (tolower(key) == 'q') {
         glutExit();
         exit(0);
-    } else {
-        ERROR("Command not found");
     }
 
     if (!colide(xi, player.z)) player.x = xi;
