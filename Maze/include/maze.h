@@ -27,7 +27,8 @@ struct {
     enum {
         SUP,
         THIRD,
-        FIRST
+        FIRST,
+        PAUSE
     } mode;
 } camera;
 

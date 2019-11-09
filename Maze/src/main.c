@@ -4,6 +4,7 @@
 #include <GL/freeglut.h>    // gl*, glut*, glu*
 #include <ctype.h>
 #include <math.h>
+#include <string.h>
 #include "util.h"       // ERROR
 #include "maze.h"       // mazeMapInit, initCamera, initPlayer, map
 #include "graphical.h"  // drawMaze, setCamera
@@ -111,7 +112,8 @@ void keyboard(unsigned char key, int x, int y) {
             zi += player.speed * sinf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        }     } 
+        }
+    } 
     if (tolower(key) == 's') {
         // superior view
         if (camera.mode == SUP) {
@@ -132,7 +134,8 @@ void keyboard(unsigned char key, int x, int y) {
             zi -= player.speed * cosf(camera.angle * M_PI / 180);
         } else if (camera.mode == FIRST){
             // TODO: resolve first person
-        }     } 
+        }
+    } 
     if (tolower(key) == 'd') {
         if (camera.mode == SUP) {
             zi += player.speed;
@@ -147,10 +150,63 @@ void keyboard(unsigned char key, int x, int y) {
     } else if (tolower(key) == 'q') {
         glutExit();
         exit(0);
+    } else if(tolower(key) == 'p'){
+        camera.mode = PAUSE;
     }
 
     if (!colide(xi, player.z)) player.x = xi;
     if (!colide(player.x, zi)) player.z = zi;
 
     glutPostRedisplay();
+}
+void text(float s, float d, float f, char *string){
+
+	//Coloca o texto na janela utilizando-se das coordenadas x ,y, z
+	glRasterPos3f(s,d,f);
+	int len=strlen(string);
+	for(int i = 0; i < len; i++){
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+
+	}
+	glutPostRedisplay();
+
+}
+
+
+void messages(int flag){
+
+	if(flag == 0){
+		glPushMatrix();
+      		 setLights();
+     	 	 drawMaze(map, complexity);
+      		 drawPlayer();
+    		glPopMatrix();
+
+      	}else if(flag == 1){
+	       glPushMatrix();
+		 glColor3ub(255,255,255);
+		 text( 5, 0, 0,  "Pressione a barra da iniciar");
+		 text( 4, 0, 0,  "Controles:        ");
+	 	 text( 3, 0, 0,  "'w' - move para cima");
+	 	 text( 2, 0, 0,  "'s' - move para tras");
+	 	 text( 1, 0, 0,  "'a' - move para esquerda");
+	 	 text( 0, 0, 0,  "'d' - move para direita");
+		 text(-1, 0, 0,  "'q' - Sair do jogo");
+ 	      glPopMatrix();
+
+	}else if(flag == 2){
+		glPushMatrix();
+		 glColor3ub(255,255,255);
+		 text( 5, 0, 0,  "Pause");
+	 	 text( 4, 0, 0,  "Controles:");
+		 text( 3, 0, 0,  "espaco - para retornar ao jogo");
+	 	 text( 2, 0, 0,  "'w' - move para cima");
+	 	 text( 1, 0, 0,  "'s' - move para tras");
+	 	 text( 0, 0, 0,  "'a' - move para esquerda");
+	 	 text(-1, 0, 0,  "'d' - move para direita");
+		 text(-2, 0, 0,  "'q' - Sair do jogo");
+		glPopMatrix();
+
+	}
+
 }
