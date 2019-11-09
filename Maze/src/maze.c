@@ -14,7 +14,7 @@ void initCamera() {
     // initial camera settings
     // camera position
     camera.posx = player.x;
-    camera.posy = camheight;
+    camera.posy = camheight/2;
     camera.posz = player.z;
     // camera lookat
     camera.lx = player.x;
@@ -30,10 +30,10 @@ void initCamera() {
     camera.min = 1;
     camera.max = 200;
     // orthogonal properties
-    camera.xmin = -8;
-    camera.xmax = 8;
-    camera.ymin = -8;
-    camera.ymax = 8;
+    camera.xmin = -8.0 * camera.prop;
+    camera.xmax = 8.0 * camera.prop;
+    camera.ymin = -8.0;
+    camera.ymax = 8.0;
     camera.zmin = -32;
     camera.zmax = 32;
     // camera mode (SUP, THIRD or FIRST)

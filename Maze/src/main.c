@@ -34,6 +34,7 @@ int main(int argc, char *argv[]) {
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
     glutCreateWindow(thename);
+    glutFullScreen();
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(special);
@@ -84,6 +85,11 @@ void motion(int x, int y) {
         dy = y - y0;
         if (camera.mode == THIRD) {
             camera.angle += dx;
+            camera.posy += (float)dy/5;
+            if (camera.posy > maxcamheight)
+                camera.posy = maxcamheight;
+            else if (camera.posy < mincamheight)
+                camera.posy = mincamheight;
         } else if (camera.mode == FIRST) {
             camera.angle -= dx;
         }
@@ -101,7 +107,7 @@ void special(int key, int x, int y)  {
         keyboard('s', x, y);
     else if (key == GLUT_KEY_LEFT)
         keyboard('a', x, y);
-    else if (GLUT_KEY_RIGHT)
+    else if (key == GLUT_KEY_RIGHT)
         keyboard('d', x, y);
     else
         ERROR("Command not found");

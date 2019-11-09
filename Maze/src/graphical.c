@@ -147,7 +147,7 @@ void setCamera() {
     // game in third person mode
     if (camera.mode == THIRD) {
         h = camheight/2; 
-        camera.posy = h;
+        // camera.posy = h;
         camera.posx = player.x - h/2 * cosf(camera.angle * M_PI / 180);
         camera.posz = player.z - h/2 * sinf(camera.angle * M_PI / 180);
         camera.lx = player.x;
@@ -173,6 +173,7 @@ void setCamera() {
         camera.uz = 0;
     // game view in superior mode
     } else if (camera.mode == SUP) {
+        camera.prop = ((float) glutGet(GLUT_WINDOW_WIDTH)) / glutGet(GLUT_WINDOW_HEIGHT);
         camera.posy = camheight;
         camera.posx = player.x;
         camera.posz = player.z;
