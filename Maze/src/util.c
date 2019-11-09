@@ -28,7 +28,7 @@ void backgen(int map[complexity][complexity], int n) {
         for (j = 0; j < n; j++)
             map[i][j] = ~0 & 0xf;
     i = rand() % n;
-    j = rand() & n;
+    j = rand() % n;
     map[i][j] |= visited;
     unvisited--;
     // while there are was visited

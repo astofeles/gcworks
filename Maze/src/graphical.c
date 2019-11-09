@@ -22,76 +22,78 @@ void drawFloor(int n) {
 /* Draws a single maze cell. Note that a Maze is composed by NxN
  * cells, where N is the maze complexity defined in 'config.h' */
 void drawCell(int cell) {
+    float value = 0.8;
     glPushMatrix();
-    glColor3f(wallcolor);
-    if ((cell & 0x0f) == 0x0f) {
-        glTranslatef(0.5, 0.5, 0.5);
-        glutSolidCube(1);
-    } else {
-        // one cell will be seen as divided by five:
-        // then each little square is 0.20 the square.
-        // note that .i is the order the wall is drawn
-        //
-        // .7           .6          .5
-        //    ,---,---,---,---,---,
-        //    |NW |   NORTH   | NE|
-        //    |---+---+---+---+---|
-        //    | W |   |   |   | E |
-        //    |-E-+---+---+---+-A-|
-        // .8 | S |   |   |   | S | .4
-        //    |-T-+---+---+---+-T-|
-        //    |   |   |   |   |   |
-        //    |---+---+---+---+---|
-        //    |SW |   SOUTH   | SE|
-        //    '---'---'---'---'---'
-        // .1           .2          .3
-        //
-        glScalef(0.2, 1, 0.2);
-        // south-east corner (aways)
-        glTranslatef(0.5, 0.5, 0.5);
-        glutSolidCube(1);
-        // south wall (not aways)
-        glTranslatef(2, 0, 0);
-        if (cell & SOUTH) {
-            glPushMatrix();
-            glScalef(3, 1, 1);
+        
+        glColor3f(wallcolor);
+        if ((cell & 0x0f) == 0x0f) {
+            glTranslatef(0.5, 0.5, 0.5);
             glutSolidCube(1);
-            glPopMatrix();
-        }
-        // south-east corner (aways)
-        glTranslatef(2, 0, 0);
-        glutSolidCube(1);
-        // east wall (not aways)
-        glTranslatef(0, 0, 2);
-        if (cell & EAST) {
-            glPushMatrix();
-            glScalef(1, 1, 3);
+        } else {
+            // one cell will be seen as divided by five:
+            // then each little square is 0.20 the square.
+            // note that .i is the order the wall is drawn
+            //
+            // .7           .6          .5
+            //    ,---,---,---,---,---,
+            //    |NW |   NORTH   | NE|
+            //    |---+---+---+---+---|
+            //    | W |   |   |   | E |
+            //    |-E-+---+---+---+-A-|
+            // .8 | S |   |   |   | S | .4
+            //    |-T-+---+---+---+-T-|
+            //    |   |   |   |   |   |
+            //    |---+---+---+---+---|
+            //    |SW |   SOUTH   | SE|
+            //    '---'---'---'---'---'
+            // .1           .2          .3
+            //
+            glScalef(0.2, 1, 0.2);
+            // south-east corner (aways)
+            glTranslatef(0.5, 0.5, 0.5);
             glutSolidCube(1);
-            glPopMatrix();
-        }
-        // north-east corner (aways)
-        glTranslatef(0, 0, 2);
-        glutSolidCube(1);
-        // north wall (not aways)
-        glTranslatef(-2, 0, 0);
-        if (cell & NORTH) {
-            glPushMatrix();
-            glScalef(3, 1, 1);
+            // south wall (not aways)
+            glTranslatef(2, 0, 0);
+            if (cell & SOUTH) {
+                glPushMatrix();
+                    glScalef(3, 1, 1);
+                    glutSolidCube(1);
+                glPopMatrix();
+            }
+            // south-east corner (aways)
+            glTranslatef(2, 0, 0);
             glutSolidCube(1);
-            glPopMatrix();
-        }
-        // north-east corner (aways)
-        glTranslatef(-2, 0, 0);
-        glutSolidCube(1);
-        // west corner (not aways)
-        glTranslatef(0, 0, -2);
-        if (cell & WEST) {
-            glPushMatrix();
-            glScalef(1, 1, 3);
+            // east wall (not aways)
+            glTranslatef(0, 0, 2);
+            if (cell & EAST) {
+                glPushMatrix();
+                    glScalef(1, 1, 3);
+                    glutSolidCube(1);
+                glPopMatrix();
+            }
+            // north-east corner (aways)
+            glTranslatef(0, 0, 2);
             glutSolidCube(1);
-            glPopMatrix();
+            // north wall (not aways)
+            glTranslatef(-2, 0, 0);
+            if (cell & NORTH) {
+                glPushMatrix();
+                    glScalef(3, 1, 1);
+                    glutSolidCube(1);
+                glPopMatrix();
+            }
+            // north-east corner (aways)
+            glTranslatef(-2, 0, 0);
+            glutSolidCube(1);
+            // west corner (not aways)
+            glTranslatef(0, 0, -2);
+            if (cell & WEST) {
+                glPushMatrix();
+                    glScalef(1, 1, 3);
+                    glutSolidCube(1);
+                glPopMatrix();
+            }
         }
-    }
     glPopMatrix();
 }
 

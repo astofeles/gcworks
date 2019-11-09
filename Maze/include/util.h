@@ -16,4 +16,6 @@ extern void backgen(int[complexity][complexity] , int);
 
 /* Error messages for the program */
 extern void error(char const *, int, char const *);
+
+extern int* hex2rgb(int);
 #endif
