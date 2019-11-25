@@ -8,7 +8,7 @@
 #include <GL/freeglut.h>
 #include "maze.h"
 #include "util.h"
-#include "config.h"
+#include "config.h" // *color
 
 void drawFloor(int n) {
     glPushMatrix();
@@ -24,7 +24,6 @@ void drawFloor(int n) {
 void drawCell(int cell) {
     float value = 0.8;
     glPushMatrix();
-        
         glColor3f(wallcolor);
         if ((cell & 0x0f) == 0x0f) {
             glTranslatef(0.5, 0.5, 0.5);
@@ -97,17 +96,38 @@ void drawCell(int cell) {
     glPopMatrix();
 }
 
+
+void drawStartEnd() {
+    glLineWidth(8);
+    glPushMatrix();
+        glColor3f(startcolor);
+        glTranslatef((float)maze.start_i+0.5, 0.5, (float)maze.start_j+0.5);
+        glScalef(0.6,0.6,0.6);
+        glutWireCube(1);
+    glPopMatrix();
+    glPushMatrix();
+        glColor3f(endcolor);
+        glTranslatef((float)maze.end_i+0.5, 0.5, (float)maze.end_j+0.5);
+        glScalef(0.6,0.6,0.6);
+        glutWireCube(1);
+    glPopMatrix();
+    glLineWidth(1);
+}
+
 /* Draws the map based on the maze matrix
  * 
  * Note that it follows the convension. see 'graphical.h'
  */
-void drawMap(int map[complexity][complexity], int n) {
+void drawMap() {
     int i, j;
+    // draws start and end
+    drawStartEnd();
+    // draw each cell
     glPushMatrix();
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < complexity; i++) {
         glPushMatrix();
-        for (j = 0; j < n; j++) {
-            drawCell(map[i][j]);
+        for (j = 0; j < complexity; j++) {
+            drawCell(maze.map[i][j]);
             glTranslatef(1, 0, 0);
         }
         glPopMatrix();
@@ -116,18 +136,18 @@ void drawMap(int map[complexity][complexity], int n) {
     glPopMatrix();
 }
 
-void drawMaze(int map[complexity][complexity], int n) {
+void drawMaze() {
     glPushMatrix();
-    drawFloor(n);
+    drawFloor(complexity);
     glScalef(1, wallheight, 1);
-    drawMap(map, n);
+    drawMap();
     glPopMatrix();
 }
 
 void setLights() {
     glPushMatrix();
     glTranslatef(10, 10, 10);
-    glLightf(GL_LIGHT1, GL_DIFFUSE, 1.5);
+    glLightf(GL_LIGHT1, GL_DIFFUSE, 0.3);
     glPopMatrix();
 }
 

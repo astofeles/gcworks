@@ -39,16 +39,26 @@ struct {
 } player;
 
 /* This is the global map matrix of the maze */
-int map[complexity][complexity];
+struct {
+    int map[complexity][complexity], start_i, start_j, end_i, end_j;
+} maze;
+/* The feremon index of the player */
+int ferom[complexity][complexity];
 
 /* It initializes the camera with some default values */
 extern void initCamera();
+
+/* init the feromon matrix */
+extern void initFeromon();
 
 /* It initializes the player */
 extern void initPlayer();
 
 /* It initializes the global maze map */
 extern void mazeMapInit();
+
+/* Spreads the feromon based in the given position */
+extern void feromonSpread(int, int);
 
 /* Returns the value in matrix that references to the given (X,Z) position */
 extern int getMapCell(float, float);

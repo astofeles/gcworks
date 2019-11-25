@@ -12,7 +12,7 @@ struct _edge;
 typedef struct _edge edge_t;
 
 /* Generates the maze map with backtrack algorithm */
-extern void backgen(int[complexity][complexity] , int);
+extern void backgen();
 
 /* Error messages for the program */
 extern void error(char const *, int, char const *);

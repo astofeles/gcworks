@@ -11,6 +11,7 @@
 #include "config.h"     // background, complexity, thename
 
 // functions prototypes
+void init();
 void display();
 void mouse(int, int, int, int);
 void motion(int, int);
@@ -25,10 +26,9 @@ int option = 1;
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
+    mazeMapInit();  // create random maze
     initPlayer();   // default player values
     initCamera();   // default camera values
-    mazeMapInit();  // create random maze
-
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
@@ -45,17 +45,24 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void display() {
+void init() {
+    //initFeromon();  // zeros in feromon matrix
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POLYGON_SMOOTH); 
+    glEnable(GL_LINE_SMOOTH); 
     glEnable(GL_SMOOTH);
     glEnable(GL_BLEND);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT1);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     glClearColor(background, 1.0);
+}
+
+void display() {
+    init();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (camera.mode == PAUSE) {
@@ -64,11 +71,10 @@ void display() {
         setCamera();
         glPushMatrix();
             setLights();
-            drawMaze(map, complexity);
+            drawMaze(maze.map, complexity);
             drawPlayer();
         glPopMatrix();
     }
-
     glutSwapBuffers();
 }
 
@@ -206,7 +212,7 @@ void messages(int flag){
     if (flag == 0){
         glPushMatrix();
             setLights();
-            drawMaze(map, complexity);
+            drawMaze(maze.map, complexity);
             drawPlayer();
         glPopMatrix();
     } else if(flag == 1){

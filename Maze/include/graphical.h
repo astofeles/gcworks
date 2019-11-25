@@ -55,10 +55,10 @@
 extern void drawFloor(int);
 
 /* draws the map based on the maze matrix */
-extern void drawMap(int[complexity][complexity], int);
+extern void drawMap();
 
 /* draws the full maze field */
-extern void drawMaze(int[complexity][complexity], int);
+extern void drawMaze();
 
 /* draws the main player */
 extern void drawPlayer();
@@ -77,5 +77,8 @@ extern void setCamera();
 
 /* It draws the player */
 extern void drawPlayer();
+
+/* Draws the start and end cubes */
+extern void drawStartEnd();
 
 #endif

@@ -43,24 +43,31 @@ void initCamera() {
 }
 
 void mazeMapInit() {
-    backgen(map, complexity);
+    backgen();
 }
 
 void initPlayer() {
     // player phisical
-    player.x = 0.5;
+    player.x = 0.5 + maze.start_i;
     player.y = 0;
-    player.z = 0.5;
+    player.z = 0.5 + maze.start_j;
     player.radius = ballradius;
     player.speed = 0.1;
 }
 
 
+void initFeromon() {
+    int i, j;
+    for (i = 0; i < complexity; i++)
+        for (j = 0; j < complexity; j++)
+            ferom[i][j] = 0;
+}
+
 int getMapCell(float x, float z) {
     int i, j;
     i = (int) (z);
     j = (int) (x);
-    return map[i][j];
+    return maze.map[i][j];
 }
 
 
@@ -83,6 +90,22 @@ int colide(float x, float z) {
     if (dx + ballradius >= 0.8 && dz - ballradius <= 0.2) ret |= (EAST | SOUTH);
     if (dx + ballradius >= 0.8 && dz + ballradius >= 0.8) ret |= (EAST | NORTH);
     return ret;
+}
+
+void feromonSpread(int i, int j) {
+    int qnt, top;
+    struct node { int i, j; } stack[complexity * complexity];
+    qnt = complexity / 2;
+    top = 0;
+    stack[top++] = (struct node) {i,j};
+    while (top > 0) {
+       ferom[i][j] += qnt--;
+       if ((maze.map[i][j] & NORTH) == 0) stack[top++] = (struct node) {i+1,j};
+       if ((maze.map[i][j] & SOUTH) == 0) stack[top++] = (struct node) {i-1,j};
+       if ((maze.map[i][j] & EAST) == 0) stack[top++] = (struct node) {i,j+1};
+       if ((maze.map[i][j] & WEST) == 0) stack[top++] = (struct node) {i,j-1};
+
+    }
 }
 
 #endif
