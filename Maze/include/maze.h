@@ -14,6 +14,7 @@
 #define SOUTH   8
 #define NONE    0
 
+int complexity;
 
 /* This struct defines the properties used by the camera */
 struct {
@@ -40,10 +41,10 @@ struct {
 
 /* This is the global map matrix of the maze */
 struct {
-    int map[complexity][complexity], start_i, start_j, end_i, end_j;
+    int map[maxcomplexity][maxcomplexity], start_i, start_j, end_i, end_j;
 } maze;
 /* The feremon index of the player */
-int ferom[complexity][complexity];
+int ferom[maxcomplexity][maxcomplexity];
 
 /* It initializes the camera with some default values */
 extern void initCamera();
@@ -65,5 +66,8 @@ extern int getMapCell(float, float);
 
 /* checks if a ball in given position colides in the maze */
 extern int colide(float, float);
+
+/* checks if position is in the end of the maze */
+extern int endded(float, float);
 
 #endif

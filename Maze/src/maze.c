@@ -26,7 +26,7 @@ void initCamera() {
     camera.uy = 0;
     // perspective properties
     camera.aperture = 45;
-    camera.prop = ((float) winwidth) / winheight;
+    // camera.prop = ((float) winwidth) / winheight;
     camera.min = 1;
     camera.max = 200;
     // orthogonal properties
@@ -37,7 +37,7 @@ void initCamera() {
     camera.zmin = -32;
     camera.zmax = 32;
     // camera mode (SUP, THIRD or FIRST)
-    camera.mode = SUP;
+    // camera.mode = SUP;
     // camera gaming properties
     camera.speed = 1.0;
 }
@@ -94,7 +94,7 @@ int colide(float x, float z) {
 
 void feromonSpread(int i, int j) {
     int qnt, top;
-    struct node { int i, j; } stack[complexity * complexity];
+    struct node { int i, j; } stack[maxcomplexity * maxcomplexity];
     qnt = complexity / 2;
     top = 0;
     stack[top++] = (struct node) {i,j};
@@ -106,6 +106,13 @@ void feromonSpread(int i, int j) {
        if ((maze.map[i][j] & WEST) == 0) stack[top++] = (struct node) {i,j-1};
 
     }
+}
+
+int endded(float x, float z) {
+    int i, j;
+    i = (int) (x);
+    j = (int) (z);
+    return (i == maze.end_i) && (j == maze.end_j);
 }
 
 #endif

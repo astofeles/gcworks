@@ -6,12 +6,12 @@
 #include <math.h>
 #include <string.h>
 #include "util.h"       // ERROR
-#include "maze.h"       // mazeMapInit, initCamera, initPlayer, map
+#include "maze.h"       // mazeMapInit, initCamera, initPlayer, maze.*, endded
 #include "graphical.h"  // drawMaze, setCamera
 #include "config.h"     // background, complexity, thename
 
 // functions prototypes
-void init();
+void init(int);
 void display();
 void mouse(int, int, int, int);
 void motion(int, int);
@@ -26,9 +26,6 @@ int option = 1;
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
-    mazeMapInit();  // create random maze
-    initPlayer();   // default player values
-    initCamera();   // default camera values
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
@@ -36,6 +33,8 @@ int main(int argc, char *argv[]) {
     glutCreateWindow(thename);
     glutFullScreen();
     glutDisplayFunc(display);
+    init(4);
+    camera.mode = SUP;
     glutKeyboardFunc(keyboard);
     glutSpecialFunc(special);
     glutMouseFunc(mouse);
@@ -45,8 +44,9 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-void init() {
+void init(int n) {
     //initFeromon();  // zeros in feromon matrix
+    complexity = n;
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POLYGON_SMOOTH); 
@@ -59,10 +59,12 @@ void init() {
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     glClearColor(background, 1.0);
+    mazeMapInit();  // create random maze
+    initPlayer();   // default player values
+    setCamera();   // default camera values
 }
 
 void display() {
-    init();
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (camera.mode == PAUSE) {
@@ -74,6 +76,10 @@ void display() {
             drawMaze(maze.map, complexity);
             drawPlayer();
         glPopMatrix();
+    }
+    if (endded(player.x, player.z)) {
+        complexity++;
+        init(complexity);
     }
     glutSwapBuffers();
 }
@@ -190,7 +196,6 @@ void keyboard(unsigned char key, int x, int y) {
 
     if (!colide(xi, player.z)) player.x = xi;
     if (!colide(player.x, zi)) player.z = zi;
-
     glutPostRedisplay();
 }
 void text(float s, float d, float f, char *string){

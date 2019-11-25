@@ -102,13 +102,13 @@ void drawStartEnd() {
     glPushMatrix();
         glColor3f(startcolor);
         glTranslatef((float)maze.start_i+0.5, 0.5, (float)maze.start_j+0.5);
-        glScalef(0.6,0.6,0.6);
+        glScalef(0.6,1,0.6);
         glutWireCube(1);
     glPopMatrix();
     glPushMatrix();
         glColor3f(endcolor);
         glTranslatef((float)maze.end_i+0.5, 0.5, (float)maze.end_j+0.5);
-        glScalef(0.6,0.6,0.6);
+        glScalef(0.6,1,0.6);
         glutWireCube(1);
     glPopMatrix();
     glLineWidth(1);
@@ -165,6 +165,7 @@ void drawPlayer() {
 void setCamera() {
     int h;
     // game in third person mode
+    camera.aperture = 45;
     if (camera.mode == THIRD) {
         h = camheight/2; 
         // camera.posy = h;

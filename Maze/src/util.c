@@ -18,7 +18,7 @@ void backgen() {
     int i, j, top = 0, length = 0, chosen, oposite[9], unvisited = complexity * complexity, max = 0;
     struct node {
        int i, j, dir;
-    } stack[complexity * complexity], list[4], pop;
+    } stack[maxcomplexity * maxcomplexity], list[4], pop;
     oposite[NORTH] = SOUTH;
     oposite[SOUTH] = NORTH;
     oposite[EAST] = WEST;
