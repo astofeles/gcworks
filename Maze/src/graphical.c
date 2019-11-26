@@ -154,10 +154,19 @@ void setLights() {
 /* It draws the player */
 void drawPlayer() {
     glPushMatrix();
-    glColor3f(playercolor);
-    glTranslatef(player.x, player.radius, player.z);
-    glScalef(player.radius, player.radius, player.radius);
-    glutSolidSphere(1, hrings, vrings);
+        glColor3f(playercolor);
+        glTranslatef(player.x, player.radius, player.z);
+        glScalef(player.radius, player.radius, player.radius);
+        glutSolidSphere(1, hrings, vrings);
+    glPopMatrix();
+}
+
+void drawFred() {
+    glPushMatrix();
+        glColor3f(fredcolor);
+        glTranslatef(fred.x, fred.radius, fred.z);
+        glScalef(fred.radius, fred.radius, fred.radius);
+        glutSolidSphere(1, hrings, vrings);
     glPopMatrix();
 }
 

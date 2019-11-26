@@ -1,6 +1,7 @@
 #ifndef _MAZE_H
 #define _MAZE_H
 
+#include <stdlib.h>
 #include "config.h"
 
 /* These are the flags definied to the map maze system
@@ -21,8 +22,8 @@ struct {
     float posx, posy, posz;
     float lx, ly, lz;
     float ux, uy, uz;
-    float aperture, prop, min, max;
     float xmin, xmax, ymin, ymax, zmin, zmax;
+    float aperture, prop, min, max;
     float speed;
     int angle;
     enum {
@@ -32,12 +33,17 @@ struct {
         PAUSE
     } mode;
 } camera;
-
+/* Defines the default timer */
+struct {
+    size_t start;
+    size_t end;
+    size_t last_time;
+} timer;
 /* Defines the main player struct */
 struct {
     float x, y, z, radius;      // phisical characteristics
     float speed;
-} player;
+} player, fred;
 
 /* This is the global map matrix of the maze */
 struct {
@@ -69,5 +75,8 @@ extern int colide(float, float);
 
 /* checks if position is in the end of the maze */
 extern int endded(float, float);
+
+/* sets fred movement */
+extern void setFred();
 
 #endif

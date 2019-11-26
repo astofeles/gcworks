@@ -53,6 +53,11 @@ void initPlayer() {
     player.z = 0.5 + maze.start_j;
     player.radius = ballradius;
     player.speed = 0.1;
+    // fred phisical
+    fred.x = player.z;
+    fred.z = player.x;
+    fred.radius = ballradius;
+    fred.speed = 0.1;
 }
 
 
@@ -93,18 +98,39 @@ int colide(float x, float z) {
 }
 
 void feromonSpread(int i, int j) {
-    int qnt, top;
-    struct node { int i, j; } stack[maxcomplexity * maxcomplexity];
-    qnt = complexity / 2;
-    top = 0;
-    stack[top++] = (struct node) {i,j};
+    int qnt, top = 0, length, k, l;
+    struct node { int i, j, q; } stack[maxcomplexity * maxcomplexity], list[4], pop;
+    // fill feromon matrix with zeros
+    for (k = 0; k < complexity; k++)
+        for (l = 0; l < complexity; l++)
+            ferom[k][l] = 0;
+    qnt = 2 *complexity;
+    stack[top++] = (struct node) {i,j,qnt};
     while (top > 0) {
-       ferom[i][j] += qnt--;
-       if ((maze.map[i][j] & NORTH) == 0) stack[top++] = (struct node) {i+1,j};
-       if ((maze.map[i][j] & SOUTH) == 0) stack[top++] = (struct node) {i-1,j};
-       if ((maze.map[i][j] & EAST) == 0) stack[top++] = (struct node) {i,j+1};
-       if ((maze.map[i][j] & WEST) == 0) stack[top++] = (struct node) {i,j-1};
+        // mark feromon level
+        ferom[i][j] = qnt;
+        qnt--;
+        // list neightbors unvisited
+        length = 0;
+        if (i > 0 && !(maze.map[i][j] & SOUTH) && (ferom[i-1][j] < qnt)) list[length++] = (struct node) {i-1,j,qnt};
+        if (j > 0 && !(maze.map[i][j] & WEST) && (ferom[i][j-1] < qnt)) list[length++] = (struct node) {i,j-1,qnt};
+        if (i < complexity-1 && !(maze.map[i][j] & NORTH) && (ferom[i+1][j] < qnt)) list[length++] = (struct node) {i+1,j,qnt};
+        if (j < complexity-1 && !(maze.map[i][j] & EAST) && (ferom[i][j+1] < qnt)) list[length++] = (struct node) {i,j+1,qnt};
 
+        if (length > 0 && qnt > 0) {
+            for (k = length-1; k > 0; k--) {
+                // push almost all neighbors
+                stack[top++] = list[k];
+            }
+            i = list[0].i;
+            j = list[0].j;
+            qnt = list[0].q;
+        } else {
+            pop = stack[--top];
+            i = pop.i;
+            j = pop.j;
+            qnt = pop.q;
+        }
     }
 }
 
@@ -115,4 +141,37 @@ int endded(float x, float z) {
     return (i == maze.end_i) && (j == maze.end_j);
 }
 
+void setFred() {
+    int i, j, max = 0, dir = NONE, xi, zi, dirs[9], available = 0;
+    xi = fred.x;
+    zi = fred.z;
+    i = (int) fred.z;
+    j = (int) fred.x;
+    // list where fred can go
+    if (!colide(fred.x + fred.speed, fred.z)) available |= NORTH;
+    if (!colide(fred.x - fred.speed, fred.z)) available |= SOUTH;
+    if (!colide(fred.x, fred.z + fred.speed)) available |= EAST;
+    switch (dir) {
+        case NORTH:
+            if (!colide(fred.x+fred.speed, fred.z))
+                fred.x += fred.speed;
+            break;
+        case SOUTH:
+            if (!colide(fred.x-fred.speed, fred.z))
+                fred.x -= fred.speed;
+            break;
+        case EAST:
+            if (!colide(fred.x, fred.z + fred.speed))
+                fred.z += fred.speed;
+            break;
+        case WEST:
+            if (!colide(fred.x, fred.z - fred.speed))
+                fred.z -= fred.speed;
+            break;
+        case NONE:
+            break;
+        default:
+            ERROR("Not a direction");
+    }
+}
 #endif

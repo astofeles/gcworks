@@ -45,23 +45,21 @@ int main(int argc, char *argv[]) {
 }
 
 void init(int n) {
-    //initFeromon();  // zeros in feromon matrix
     complexity = n;
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POLYGON_SMOOTH); 
-    glEnable(GL_LINE_SMOOTH); 
     glEnable(GL_SMOOTH);
     glEnable(GL_BLEND);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHT1);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
     glClearColor(background, 1.0);
     mazeMapInit();  // create random maze
     initPlayer();   // default player values
     setCamera();   // default camera values
+    timer.start = clock();
 }
 
 void display() {
@@ -75,9 +73,11 @@ void display() {
             setLights();
             drawMaze(maze.map, complexity);
             drawPlayer();
+            drawFred();
         glPopMatrix();
     }
     if (endded(player.x, player.z)) {
+        timer.last_time = clock() - timer.start;
         complexity++;
         init(complexity);
     }
@@ -196,6 +196,17 @@ void keyboard(unsigned char key, int x, int y) {
 
     if (!colide(xi, player.z)) player.x = xi;
     if (!colide(player.x, zi)) player.z = zi;
+    feromonSpread(player.x, player.z);
+    ///// DEBUG
+    for (int k = 0; k < complexity; k++) {
+        for (int l = 0; l < complexity; l++) {
+            printf("%3d ", ferom[k][l]);
+        }
+        printf("\n");
+    }
+    printf("\n");
+    ///// DEBUG
+    setFred();
     glutPostRedisplay();
 }
 void text(float s, float d, float f, char *string){

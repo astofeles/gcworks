@@ -78,6 +78,9 @@ extern void setCamera();
 /* It draws the player */
 extern void drawPlayer();
 
+/* It draws the Fred */
+extern void drawFred();
+
 /* Draws the start and end cubes */
 extern void drawStartEnd();
 
