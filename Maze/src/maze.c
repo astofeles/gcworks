@@ -97,6 +97,27 @@ int colide(float x, float z) {
     return ret;
 }
 
+// void RECUR(int i, int j, int qnt) {
+//     if (qnt >= 1) {
+//         ferom[i][j] = qnt;
+//         if (i > 0 && !(maze.map[i][j] & SOUTH)) RECUR(i-1,j,qnt-1);
+//         if (j > 0 && !(maze.map[i][j] & WEST)) RECUR(i,j-1,qnt-1);
+//         if (i < complexity-1 && !(maze.map[i][j] & NORTH)) RECUR(i+1,j,qnt-1);
+//         if (j < complexity-1 && !(maze.map[i][j] & EAST)) RECUR(i,j+1,qnt-1);
+//     }
+// }
+// 
+// void feromonSpread(int i, int j) {
+//     int qnt, k, l;
+//     for (k = 0; k < complexity; k++) {
+//         for (l = 0; l < complexity; l++) {
+//             ferom[k][l] = 0;
+//         }
+//     }
+//     RECUR(i,j,complexity * complexity - 1);
+// }
+
+
 void feromonSpread(int i, int j) {
     int qnt, top = 0, length, k, l;
     struct node { int i, j, q; } stack[maxcomplexity * maxcomplexity], list[4], pop;
@@ -104,7 +125,7 @@ void feromonSpread(int i, int j) {
     for (k = 0; k < complexity; k++)
         for (l = 0; l < complexity; l++)
             ferom[k][l] = 0;
-    qnt = 2 *complexity;
+    qnt = complexity * complexity;
     stack[top++] = (struct node) {i,j,qnt};
     while (top > 0) {
         // mark feromon level
@@ -142,36 +163,72 @@ int endded(float x, float z) {
 }
 
 void setFred() {
-    int i, j, max = 0, dir = NONE, xi, zi, dirs[9], available = 0;
+    static int dir = EAST, count = 0;;
+    printf("DBG: setFred entered\n");
+    int k, l, i, j, max = 0, xi, zi, available = 0;
+    int alldirs[] = {NORTH, SOUTH, EAST, WEST};
+    struct node {
+        int ferom, dir;
+    } dirs[5], swap;
     xi = fred.x;
     zi = fred.z;
-    i = (int) fred.z;
-    j = (int) fred.x;
+    // index feromon
+    i = (int) fred.x;
+    j = (int) fred.z;
+    // zero dirs
+    for (k = 0; k < 4; k++) dirs[k] = (struct node) {0, NONE} ;
     // list where fred can go
     if (!colide(fred.x + fred.speed, fred.z)) available |= NORTH;
-    if (!colide(fred.x - fred.speed, fred.z)) available |= SOUTH;
     if (!colide(fred.x, fred.z + fred.speed)) available |= EAST;
+    if (!colide(fred.x - fred.speed, fred.z)) available |= SOUTH;
+    if (!colide(fred.x, fred.z - fred.speed)) available |= WEST;
+    printf("DBG: Available %x\n", available);
+    // get neighbors feromon
+    dirs[0] = (struct node) {ferom[i+1][j], NORTH};
+    dirs[1] = (struct node) {ferom[i][j+1], EAST};
+    dirs[2] = (struct node) {ferom[i-1][j], SOUTH};
+    dirs[3] = (struct node) {ferom[i][j-1], WEST};
+    dirs[4] = (struct node) {ferom[i][j], dir};
+    /// DEBUG
+    printf("DBG: dirs = [ ");
+    for (k = 0; k < 4; k++) printf("%d ", dirs[k].dir);
+    printf(" ]\n");
+    //// DEBUG
+    // sort neighbors feromon
+    for (k = 0; k < 4; k++) {
+        for (l = 0; l < k; l++) {
+            if (dirs[k].ferom < dirs[l].ferom) {
+                swap = dirs[k];
+                dirs[k] =  dirs[l];
+                dirs[l] = swap;
+            }
+        }
+    }
+    // walk
+    for (k = 4; k >= 0; k--) {
+        if (dirs[k].dir & available) {
+            printf("DBG: dir = %d\n", dirs[k].dir);
+                dir = dirs[k].dir;
+            break;
+        }
+    }
     switch (dir) {
         case NORTH:
-            if (!colide(fred.x+fred.speed, fred.z))
-                fred.x += fred.speed;
+            fred.x += fred.speed;
             break;
         case SOUTH:
-            if (!colide(fred.x-fred.speed, fred.z))
-                fred.x -= fred.speed;
+            fred.x -= fred.speed;
             break;
         case EAST:
-            if (!colide(fred.x, fred.z + fred.speed))
-                fred.z += fred.speed;
+            fred.z += fred.speed;
             break;
         case WEST:
-            if (!colide(fred.x, fred.z - fred.speed))
-                fred.z -= fred.speed;
+            fred.z -= fred.speed;
             break;
-        case NONE:
+        case 0:
             break;
         default:
-            ERROR("Not a direction");
+            ERROR("wrong direction");
     }
 }
 #endif
