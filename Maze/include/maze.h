@@ -9,11 +9,11 @@
  * 0b0010 -> NORTH
  * 0b0100 -> WEST
  * 0b1000 -> SOUTH */
-#define EAST    1
-#define NORTH   2
-#define WEST    4
-#define SOUTH   8
-#define NONE    0
+#define EAST    0x1
+#define NORTH   0x2
+#define WEST    0x4
+#define SOUTH   0x8
+#define NONE    0x0
 
 int complexity;
 
@@ -37,8 +37,8 @@ struct {
 struct {
     size_t start;
     size_t end;
-    size_t last_time;
-} timer;
+    double last_time;
+} timer, fredDelay;
 /* Defines the main player struct */
 struct {
     float x, y, z, radius;      // phisical characteristics
@@ -72,6 +72,9 @@ extern int getMapCell(float, float);
 
 /* checks if a ball in given position colides in the maze */
 extern int colide(float, float);
+
+/* checks if collided with fred */
+extern int colideFred(float, float);
 
 /* checks if position is in the end of the maze */
 extern int endded(float, float);

@@ -9,6 +9,7 @@
 #include <GL/freeglut.h>
 #include "util.h"       // backgen
 #include "config.h"     // winwidth, winheight, playercolor, ballradius, camheight
+#include "time.h"       // clock
 
 void initCamera() {
     // initial camera settings
@@ -54,10 +55,17 @@ void initPlayer() {
     player.radius = ballradius;
     player.speed = 0.1;
     // fred phisical
-    fred.x = player.z;
-    fred.z = player.x;
+    if (maze.start_i < (complexity/2))
+        fred.x = (float) complexity - 0.5;
+    else
+        fred.x = 0.5;
+    if (maze.end_j < (complexity/2))
+        fred.z = (float) complexity - 0.5;
+    else
+        fred.z = 0.5;
     fred.radius = ballradius;
-    fred.speed = 0.1;
+    fred.speed = 0.05;
+    fredDelay.start = clock();
 }
 
 
@@ -70,8 +78,8 @@ void initFeromon() {
 
 int getMapCell(float x, float z) {
     int i, j;
-    i = (int) (z);
-    j = (int) (x);
+    i = (int) (x);
+    j = (int) (z);
     return maze.map[i][j];
 }
 
@@ -85,67 +93,58 @@ int colide(float x, float z) {
     dx = x - (int)x;
     dz = z - (int)z;
     // walls bitwise verification
-    if (dx - ballradius <= 0.2 && (cell&WEST)) ret |= WEST;
-    if (dx + ballradius >= 0.8 && (cell&EAST)) ret |= EAST;
-    if (dz - ballradius <= 0.2 && (cell&SOUTH)) ret |= SOUTH;
-    if (dz + ballradius >= 0.8 && (cell&NORTH)) ret |= NORTH;
+    if (dx - ballradius <= 0.2 && (cell&SOUTH)) ret |= SOUTH;
+    if (dx + ballradius >= 0.8 && (cell&NORTH)) ret |= NORTH;
+    if (dz - ballradius <= 0.2 && (cell&WEST)) ret |= WEST;
+    if (dz + ballradius >= 0.8 && (cell&EAST)) ret |= EAST;
     // corners bitwise verification
     if (dx - ballradius <= 0.2 && dz - ballradius <= 0.2) ret |= (WEST | SOUTH);
-    if (dx - ballradius <= 0.2 && dz + ballradius >= 0.8) ret |= (WEST | NORTH);
-    if (dx + ballradius >= 0.8 && dz - ballradius <= 0.2) ret |= (EAST | SOUTH);
+    if (dx - ballradius <= 0.2 && dz + ballradius >= 0.8) ret |= (EAST | SOUTH);
+    if (dx + ballradius >= 0.8 && dz - ballradius <= 0.2) ret |= (WEST | NORTH);
     if (dx + ballradius >= 0.8 && dz + ballradius >= 0.8) ret |= (EAST | NORTH);
     return ret;
 }
 
-// void RECUR(int i, int j, int qnt) {
-//     if (qnt >= 1) {
-//         ferom[i][j] = qnt;
-//         if (i > 0 && !(maze.map[i][j] & SOUTH)) RECUR(i-1,j,qnt-1);
-//         if (j > 0 && !(maze.map[i][j] & WEST)) RECUR(i,j-1,qnt-1);
-//         if (i < complexity-1 && !(maze.map[i][j] & NORTH)) RECUR(i+1,j,qnt-1);
-//         if (j < complexity-1 && !(maze.map[i][j] & EAST)) RECUR(i,j+1,qnt-1);
-//     }
-// }
-// 
-// void feromonSpread(int i, int j) {
-//     int qnt, k, l;
-//     for (k = 0; k < complexity; k++) {
-//         for (l = 0; l < complexity; l++) {
-//             ferom[k][l] = 0;
-//         }
-//     }
-//     RECUR(i,j,complexity * complexity - 1);
-// }
-
-
 void feromonSpread(int i, int j) {
+    // visited is check in 5th bit (0b10000)
+    const int visited = 0x10;
     int qnt, top = 0, length, k, l;
-    struct node { int i, j, q; } stack[maxcomplexity * maxcomplexity], list[4], pop;
+    struct node {
+        int i, j, q;
+    } stack[maxcomplexity * maxcomplexity], list[4], pop, curr;
     // fill feromon matrix with zeros
-    for (k = 0; k < complexity; k++)
-        for (l = 0; l < complexity; l++)
+    // and unvisit elements in maze.map matrix
+    for (k = 0; k < complexity; k++) {
+        for (l = 0; l < complexity; l++) {
             ferom[k][l] = 0;
-    qnt = complexity * complexity;
+            maze.map[k][l] &= 0x0f;
+        }
+    }
+    qnt = complexity;
     stack[top++] = (struct node) {i,j,qnt};
-    while (top > 0) {
-        // mark feromon level
+    while (top > 0 && qnt > 0) {
+        // set pseudoon current postion
         ferom[i][j] = qnt;
-        qnt--;
-        // list neightbors unvisited
+        maze.map[i][j] |= visited;
+        // list not visited possible neighbors
         length = 0;
-        if (i > 0 && !(maze.map[i][j] & SOUTH) && (ferom[i-1][j] < qnt)) list[length++] = (struct node) {i-1,j,qnt};
-        if (j > 0 && !(maze.map[i][j] & WEST) && (ferom[i][j-1] < qnt)) list[length++] = (struct node) {i,j-1,qnt};
-        if (i < complexity-1 && !(maze.map[i][j] & NORTH) && (ferom[i+1][j] < qnt)) list[length++] = (struct node) {i+1,j,qnt};
-        if (j < complexity-1 && !(maze.map[i][j] & EAST) && (ferom[i][j+1] < qnt)) list[length++] = (struct node) {i,j+1,qnt};
-
-        if (length > 0 && qnt > 0) {
-            for (k = length-1; k > 0; k--) {
-                // push almost all neighbors
+        if (!(maze.map[i][j] & NORTH) && !(maze.map[i+1][j] & visited))
+            list[length++] = (struct node) {i+1, j, qnt-1};
+        if (!(maze.map[i][j] & EAST) && !(maze.map[i][j+1] & visited))
+            list[length++] = (struct node) {i, j+1, qnt-1};
+        if (!(maze.map[i][j] & SOUTH) && !(maze.map[i-1][j] & visited))
+            list[length++] = (struct node) {i-1, j, qnt-1};
+        if (!(maze.map[i][j] & WEST) && !(maze.map[i][j-1] & visited))
+            list[length++] = (struct node) {i, j-1, qnt-1};
+        // check is there is neighbors
+        if (length > 0) {
+            // push all neighbors but first
+            for (k = length-1; k > 0; --k)
                 stack[top++] = list[k];
-            }
-            i = list[0].i;
-            j = list[0].j;
-            qnt = list[0].q;
+            curr = list[0];
+            i = curr.i;
+            j = curr.j;
+            qnt = curr.q;
         } else {
             pop = stack[--top];
             i = pop.i;
@@ -163,54 +162,58 @@ int endded(float x, float z) {
 }
 
 void setFred() {
-    static int dir = EAST, count = 0;;
-    printf("DBG: setFred entered\n");
-    int k, l, i, j, max = 0, xi, zi, available = 0;
+    static int dir = NONE, count = 0;
+    int k, l, i, j, max = 0, available = 0, min, s, length;
     int alldirs[] = {NORTH, SOUTH, EAST, WEST};
     struct node {
         int ferom, dir;
     } dirs[5], swap;
-    xi = fred.x;
-    zi = fred.z;
     // index feromon
     i = (int) fred.x;
     j = (int) fred.z;
-    // zero dirs
-    for (k = 0; k < 4; k++) dirs[k] = (struct node) {0, NONE} ;
     // list where fred can go
     if (!colide(fred.x + fred.speed, fred.z)) available |= NORTH;
     if (!colide(fred.x, fred.z + fred.speed)) available |= EAST;
     if (!colide(fred.x - fred.speed, fred.z)) available |= SOUTH;
     if (!colide(fred.x, fred.z - fred.speed)) available |= WEST;
-    printf("DBG: Available %x\n", available);
     // get neighbors feromon
-    dirs[0] = (struct node) {ferom[i+1][j], NORTH};
-    dirs[1] = (struct node) {ferom[i][j+1], EAST};
-    dirs[2] = (struct node) {ferom[i-1][j], SOUTH};
-    dirs[3] = (struct node) {ferom[i][j-1], WEST};
-    dirs[4] = (struct node) {ferom[i][j], dir};
-    /// DEBUG
-    printf("DBG: dirs = [ ");
-    for (k = 0; k < 4; k++) printf("%d ", dirs[k].dir);
-    printf(" ]\n");
-    //// DEBUG
+    length = 0;
+    if (!(maze.map[i][j] & NORTH))
+        dirs[length++] = (struct node) {ferom[i+1][j], NORTH};
+    if (!(maze.map[i][j] & EAST))
+        dirs[length++] = (struct node) {ferom[i][j+1], EAST};
+    if (!(maze.map[i][j] & SOUTH))
+        dirs[length++] = (struct node) {ferom[i-1][j], SOUTH};
+    if (!(maze.map[i][j] & WEST))
+        dirs[length++] = (struct node) {ferom[i][j-1], WEST};
+    dirs[length++] = (struct node) {ferom[i][j], dir};
     // sort neighbors feromon
-    for (k = 0; k < 4; k++) {
-        for (l = 0; l < k; l++) {
-            if (dirs[k].ferom < dirs[l].ferom) {
+    s = 1;
+    while (s) {
+        s = 0;
+        for (k = 0; k < length-1; k++) {
+            if (dirs[k].ferom > dirs[k+1].ferom) {
                 swap = dirs[k];
-                dirs[k] =  dirs[l];
-                dirs[l] = swap;
+                dirs[k] = dirs[k+1];
+                dirs[k+1] = swap;
+                s = 1;
             }
         }
     }
     // walk
-    for (k = 4; k >= 0; k--) {
+    for (k = length-1; k >= 0; k--) {
         if (dirs[k].dir & available) {
-            printf("DBG: dir = %d\n", dirs[k].dir);
-                dir = dirs[k].dir;
+            dir = dirs[k].dir;
+            if (dirs[k].ferom == 0) count++;
+            else count = 0;
             break;
         }
+    }
+    if (count >= complexity * complexity) {
+        count = 0;
+        do {
+            dir = alldirs[rand() % 4];
+        } while (!(dir & available));
     }
     switch (dir) {
         case NORTH:
@@ -230,5 +233,11 @@ void setFred() {
         default:
             ERROR("wrong direction");
     }
+}
+
+int colideFred(float x, float z) {
+    if ( sqrt(pow(x - fred.x,2) + pow(z - fred.z,2)) < ballradius)
+        return 1;
+    return 0;
 }
 #endif

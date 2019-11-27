@@ -10,7 +10,6 @@ SRC=$(wildcard $(SDIR)/*.c)
 OBJ=$(patsubst $(SDIR)/%.c,$(ODIR)/%.o, $(SRC))
 CC=gcc
 CFLAGS=\
-	-O3 	\
 	-lm		\
 	-lglut	\
 	-lGL	\

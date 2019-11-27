@@ -9,6 +9,7 @@
 #include "maze.h"       // mazeMapInit, initCamera, initPlayer, maze.*, endded
 #include "graphical.h"  // drawMaze, setCamera
 #include "config.h"     // background, complexity, thename
+#include "leader.h"     // addEntry, printLeader
 
 // functions prototypes
 void init(int);
@@ -23,15 +24,18 @@ void messages(int);
 // global variables
 int firstmov = 1;
 int option = 1;
+char username[128];
 
 int main(int argc, char *argv[]) {
     srand(time(NULL));
+    printf("Digite seu nick: ");
+    scanf("%[^\n]", username);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInit(&argc, argv);
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
     glutCreateWindow(thename);
-    glutFullScreen();
+    // glutFullScreen();
     glutDisplayFunc(display);
     init(4);
     camera.mode = SUP;
@@ -73,14 +77,26 @@ void display() {
             setLights();
             drawMaze(maze.map, complexity);
             drawPlayer();
-            drawFred();
+            if (complexity >= 8) {
+                drawFred();
+                if (colideFred(player.x, player.z)) {
+                    keyboard('q', 0, 0);
+                }
+            }
         glPopMatrix();
     }
     if (endded(player.x, player.z)) {
-        timer.last_time = clock() - timer.start;
+        timer.last_time = (double)(clock() - timer.start) / CLOCKS_PER_SEC;
         complexity++;
         init(complexity);
     }
+    fredDelay.end = clock();
+    fredDelay.last_time = (double)(fredDelay.end - fredDelay.start) / CLOCKS_PER_SEC;
+    if (fredDelay.last_time > 0.03) {
+        fredDelay.start = fredDelay.end;
+        setFred();
+    }
+    glutPostRedisplay();
     glutSwapBuffers();
 }
 
@@ -177,8 +193,11 @@ void keyboard(unsigned char key, int x, int y) {
             // TODO: resolve first person
         } 
     } else if (key == '\t') {
-        camera.mode = (camera.mode + 1) % 3;
+        camera.mode = (camera.mode + 1) % 2;
     } else if (tolower(key) == 'q') {
+        addEntry("leaderboard.txt", username, complexity-4, timer.last_time);
+        printEntry("leaderboard.txt");
+        system("cat leaderboard.txt");
         glutExit();
         exit(0);
     } else if (tolower(key) == 'p'){
@@ -197,16 +216,6 @@ void keyboard(unsigned char key, int x, int y) {
     if (!colide(xi, player.z)) player.x = xi;
     if (!colide(player.x, zi)) player.z = zi;
     feromonSpread(player.x, player.z);
-    ///// DEBUG
-    for (int k = 0; k < complexity; k++) {
-        for (int l = 0; l < complexity; l++) {
-            printf("%3d ", ferom[k][l]);
-        }
-        printf("\n");
-    }
-    printf("\n");
-    ///// DEBUG
-    setFred();
     glutPostRedisplay();
 }
 void text(float s, float d, float f, char *string){

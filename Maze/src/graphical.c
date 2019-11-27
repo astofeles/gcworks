@@ -52,43 +52,43 @@ void drawCell(int cell) {
             glTranslatef(0.5, 0.5, 0.5);
             glutSolidCube(1);
             // south wall (not aways)
-            glTranslatef(2, 0, 0);
+            glTranslatef(0, 0, 2);
             if (cell & SOUTH) {
                 glPushMatrix();
-                    glScalef(3, 1, 1);
+                    glScalef(1, 1, 3);
                     glutSolidCube(1);
                 glPopMatrix();
             }
             // south-east corner (aways)
-            glTranslatef(2, 0, 0);
+            glTranslatef(0, 0, 2);
             glutSolidCube(1);
             // east wall (not aways)
-            glTranslatef(0, 0, 2);
+            glTranslatef(2, 0, 0);
             if (cell & EAST) {
-                glPushMatrix();
-                    glScalef(1, 1, 3);
-                    glutSolidCube(1);
-                glPopMatrix();
-            }
-            // north-east corner (aways)
-            glTranslatef(0, 0, 2);
-            glutSolidCube(1);
-            // north wall (not aways)
-            glTranslatef(-2, 0, 0);
-            if (cell & NORTH) {
                 glPushMatrix();
                     glScalef(3, 1, 1);
                     glutSolidCube(1);
                 glPopMatrix();
             }
             // north-east corner (aways)
-            glTranslatef(-2, 0, 0);
+            glTranslatef(2, 0, 0);
             glutSolidCube(1);
-            // west corner (not aways)
+            // north wall (not aways)
             glTranslatef(0, 0, -2);
-            if (cell & WEST) {
+            if (cell & NORTH) {
                 glPushMatrix();
                     glScalef(1, 1, 3);
+                    glutSolidCube(1);
+                glPopMatrix();
+            }
+            // north-east corner (aways)
+            glTranslatef(0, 0, -2);
+            glutSolidCube(1);
+            // west corner (not aways)
+            glTranslatef(-2, 0, 0);
+            if (cell & WEST) {
+                glPushMatrix();
+                    glScalef(3, 1, 1);
                     glutSolidCube(1);
                 glPopMatrix();
             }
@@ -128,10 +128,10 @@ void drawMap() {
         glPushMatrix();
         for (j = 0; j < complexity; j++) {
             drawCell(maze.map[i][j]);
-            glTranslatef(1, 0, 0);
+            glTranslatef(0, 0, 1);
         }
         glPopMatrix();
-        glTranslatef(0, 0, 1);
+        glTranslatef(1, 0, 0);
     }
     glPopMatrix();
 }
