@@ -8,21 +8,21 @@
  *           |
  *           |
  *          / `-._
- *         /      ` Z
- *        X
+ *         /      ` X
+ *        Z
  *
  * - The maze is composed by NxN cells (#), where each cell is primary sized 1.
  *   Therefore the maze is sized NxN
  * - The maze matrix index is prop-equivalent to the maze cells mapped i:x and j:z.
  *   That is, m[i][j] represents cell '#' in x=ki , z = kj , to some k.
  *
- * z
+ * x
  * ^
  * | #######
  * | #######
  * | #######
  * | #######
- * `----------> x
+ * `----------> z
  *
  * - Matrix index convension for the map follows:
  *
@@ -65,7 +65,7 @@ extern void drawPlayer();
 
 /* draws a given cell of the maze as an 4 bit written in the form:
  * NORTH | EAST | SOUTH | WEST */
-extern void drawCell(int);
+extern void drawCell(int, int);
 
 extern void drawGraph(int**, int);
 

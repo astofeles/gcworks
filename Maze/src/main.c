@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     glutInitWindowSize(winwidth, winheight);
     glutInitWindowPosition(10, 10);
     glutCreateWindow(thename);
-    // glutFullScreen();
+    glutFullScreen();
     glutDisplayFunc(display);
     init(4);
     camera.mode = SUP;
@@ -55,7 +55,7 @@ void init(int n) {
     glEnable(GL_POLYGON_SMOOTH); 
     glEnable(GL_SMOOTH);
     glEnable(GL_BLEND);
-    glEnable(GL_LIGHTING);
+    // glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
@@ -112,7 +112,7 @@ void motion(int x, int y) {
         dx = x - x0;
         dy = y - y0;
         if (camera.mode == THIRD) {
-            camera.angle += dx;
+            camera.angle += (float)dx/2;
             camera.posy += (float)dy/5;
             if (camera.posy > maxcamheight)
                 camera.posy = maxcamheight;

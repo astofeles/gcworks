@@ -29,8 +29,8 @@ struct {
     enum {
         SUP,
         THIRD,
-        FIRST,
-        PAUSE
+        FIRST, // DEPRECIATED
+        PAUSE  // DEPRECIATED
     } mode;
 } camera;
 /* Defines the default timer */

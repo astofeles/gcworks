@@ -25,7 +25,7 @@
 #define floorcolor      .1,.1,.1
 #define background      .3,.5,.5
 #define playercolor     .8,.6,.1
-#define fredcolor       .9,.1,.1
+#define fredcolor       .9,.5,.9
 #define startcolor      .3,.3,.1
 #define endcolor        .4,.1,.2
 

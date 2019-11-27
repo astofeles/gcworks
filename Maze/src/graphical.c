@@ -12,18 +12,27 @@
 
 void drawFloor(int n) {
     glPushMatrix();
-    glColor3f(floorcolor);
-    glScalef(n, 0, n);
-    glTranslatef(0.5, 0, 0.5);
-    glutSolidCube(1);
+        glColor3f(floorcolor);
+        glScalef(n, 0, n);
+        glTranslatef(0.5, 0, 0.5);
     glPopMatrix();
 }
 
 /* Draws a single maze cell. Note that a Maze is composed by NxN
  * cells, where N is the maze complexity defined in 'config.h' */
-void drawCell(int cell) {
+void drawCell(int cell, int ferom) {
     float value = 0.8;
     glPushMatrix();
+        glPushMatrix();
+            //ferom -= (complexity/2);
+            glColor3f((float)ferom/complexity, 0, (1.0f-ferom)/complexity);
+            glBegin(GL_QUADS);
+                glVertex3f(1, 0, 0);
+                glVertex3f(1, 0, 1);
+                glVertex3f(0, 0, 1);
+                glVertex3f(0, 0, 0);
+            glEnd();
+        glPopMatrix();
         glColor3f(wallcolor);
         if ((cell & 0x0f) == 0x0f) {
             glTranslatef(0.5, 0.5, 0.5);
@@ -127,7 +136,7 @@ void drawMap() {
     for (i = 0; i < complexity; i++) {
         glPushMatrix();
         for (j = 0; j < complexity; j++) {
-            drawCell(maze.map[i][j]);
+            drawCell(maze.map[i][j], ferom[i][j]);
             glTranslatef(0, 0, 1);
         }
         glPopMatrix();

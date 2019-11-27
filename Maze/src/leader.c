@@ -29,7 +29,7 @@ void addEntry(char const * fname, char const *name, int level, double time) {
     i = len;
     while (i > 0 && newer.level > top[i].level)
         i--;
-    while (i > 0 && newer.time < top[i].time)
+    while (i > 0 && newer.time < top[i].time && newer.level == top[i].level)
         i--;
     if (i < MAX_LEADER) {
         if (len < MAX_LEADER) len++;

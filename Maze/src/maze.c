@@ -37,9 +37,7 @@ void initCamera() {
     camera.ymax = 8.0;
     camera.zmin = -32;
     camera.zmax = 32;
-    // camera mode (SUP, THIRD or FIRST)
-    // camera.mode = SUP;
-    // camera gaming properties
+
     camera.speed = 1.0;
 }
 
@@ -122,9 +120,10 @@ void feromonSpread(int i, int j) {
     }
     qnt = complexity;
     stack[top++] = (struct node) {i,j,qnt};
-    while (top > 0 && qnt > 0) {
+    while (top >= 0) {
         // set pseudoon current postion
-        ferom[i][j] = qnt;
+        if (qnt > 0)
+            ferom[i][j] = qnt;
         maze.map[i][j] |= visited;
         // list not visited possible neighbors
         length = 0;
